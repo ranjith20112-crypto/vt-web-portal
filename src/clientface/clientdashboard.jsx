@@ -20,7 +20,7 @@
     import Header from '../screens/header';
     import { useNavigate } from "react-router-dom";
 
-    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://backend-9fothcpv0-saaa7.vercel.app';
     const API = `${API_BASE_URL}/api`;
 
     const apiCall = async (endpoint, options = {}) => {

@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../screens/header';
 
 // ==================== API CONFIG ====================
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://backend-9fothcpv0-saaa7.vercel.app/api';
 const EMPLOYEES_ENDPOINT = `${API_BASE_URL}/useraccess/employees`;
 const ROLES_ENDPOINT = `${API_BASE_URL}/useraccess/roles`;
 
