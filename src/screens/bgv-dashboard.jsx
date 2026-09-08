@@ -40,7 +40,7 @@ import api from '../apiroute/apiroute';
 import { getCheckTypeVisual } from '../config/verificationPalette';
 
 /* ───────── Light-theme card colours ───────── */
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://backend-9fothcpv0-saaa7.vercel.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-r6xl.onrender.com';
 const API = `${API_BASE_URL}/api`;
 
 const CARD_BG = '#FFFFFF';
