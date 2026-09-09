@@ -4,8 +4,8 @@
 ============================================================ */
 
 import React, {
-  useState,
-  useEffect
+ useState,
+ useEffect
 } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -261,22 +261,22 @@ function useLiveClock() {
 ============================================================ */
 
 function StatCard({
-  title,
-  value,
-  icon: Icon,
-  change,
-  color,
-  colorRgb,
-  delay,
-  refreshKey
+ title,
+ value,
+ icon: Icon,
+ change,
+ color,
+ colorRgb,
+ delay,
+ refreshKey
 }) {
 
-  const animatedValue =
-    useCountUp(
-      value,
-      1200 + delay * 100,
-      refreshKey
-    );
+ const animatedValue =
+ useCountUp(
+ value,
+ 1200 + delay * 100,
+ refreshKey
+ );
 
  const isPositive =
  change >= 0;
@@ -451,10 +451,10 @@ function ChartCard({
 
 export default function Dashboard() {
 
-  const navigate = useNavigate();
+ const navigate = useNavigate();
 
-  const liveTime =
-    useLiveClock();
+ const liveTime =
+ useLiveClock();
 
 
  /* ==========================================================
@@ -528,7 +528,7 @@ export default function Dashboard() {
  const [isRefreshing, setIsRefreshing] =
  useState(false);
  const [refreshKey, setRefreshKey] =
-  useState(0);
+ useState(0);
 
  const [isOffline, setIsOffline] =
  useState(false);
@@ -1395,39 +1395,39 @@ export default function Dashboard() {
  const clients = {};
 
 data.forEach((wo) => {
-  const clientName =
-    getClientName(wo) ||
-    'Unknown Client';
+ const clientName =
+ getClientName(wo) ||
+ 'Unknown Client';
 
-  const candidateName =
-    wo.fullName ||
-    'Unknown Candidate';
+ const candidateName =
+ wo.fullName ||
+ 'Unknown Candidate';
 
-  const key = `${clientName}-${candidateName}`;
+ const key = `${clientName}-${candidateName}`;
 
-  if (!clients[key]) {
-    clients[key] = {
-      client: clientName,
-      candidate: candidateName,
-      wos: 0,
-      checks: 0
-    };
-  }
+ if (!clients[key]) {
+ clients[key] = {
+ client: clientName,
+ candidate: candidateName,
+ wos: 0,
+ checks: 0
+ };
+ }
 
-  clients[key].wos += 1;
+ clients[key].wos += 1;
 
-  clients[key].checks +=
-    Array.isArray(wo.checks)
-      ? wo.checks.length
-      : 0;
+ clients[key].checks +=
+ Array.isArray(wo.checks)
+ ? wo.checks.length
+ : 0;
 });
 
 const finalTableData =
-  Object.values(clients).map((c) => ({
-    ...c,
-    amount: '—',
-    status: 'Active'
-  }));
+ Object.values(clients).map((c) => ({
+ ...c,
+ amount: '—',
+ status: 'Active'
+ }));
 
 
  setTableData(
@@ -1556,7 +1556,7 @@ const finalTableData =
 
  const response =
  await axios.get(
- 'https://backend-r6xl.onrender.com/api/workorders'
+ 'http://localhost:5000/api/workorders'
  );
 
 
@@ -1644,9 +1644,9 @@ const finalTableData =
  data
  );
  if (isRefresh) {
-  setRefreshKey(
-    prev => prev + 1
-  );
+ setRefreshKey(
+ prev => prev + 1
+ );
 } 
 
  } catch (
@@ -1887,36 +1887,36 @@ const finalTableData =
  >
 
  <button
-  type="button"
-  onClick={() => {
-    if (!isRefreshing) {
-      getData(true);
-    }
-  }}
-  disabled={isRefreshing}
-  className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all hover:scale-105 disabled:opacity-50"
-  style={{
-    background:
-      'linear-gradient(135deg, #8B5CF6, #EC4899)',
-    color: 'white',
-    cursor: isRefreshing
-      ? 'not-allowed'
-      : 'pointer'
-  }}
+ type="button"
+ onClick={() => {
+ if (!isRefreshing) {
+ getData(true);
+ }
+ }}
+ disabled={isRefreshing}
+ className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all hover:scale-105 disabled:opacity-50"
+ style={{
+ background:
+ 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+ color: 'white',
+ cursor: isRefreshing
+ ? 'not-allowed'
+ : 'pointer'
+ }}
 >
-  <FiRefreshCw
-    className={
-      isRefreshing
-        ? 'animate-spin'
-        : ''
-    }
-    size={18}
-  />
+ <FiRefreshCw
+ className={
+ isRefreshing
+ ? 'animate-spin'
+ : ''
+ }
+ size={18}
+ />
 
-  {isRefreshing
-    ? 'Refreshing...'
-    : 'Refresh'
-  }
+ {isRefreshing
+ ? 'Refreshing...'
+ : 'Refresh'
+ }
 </button>
 
  <div
@@ -2519,16 +2519,16 @@ const finalTableData =
  >
 
  {statsData.map(
-  (stat, i) => (
+ (stat, i) => (
 
-    <StatCard
-      key={`${i}-${refreshKey}`}
-      {...stat}
-      delay={i}
-      refreshKey={refreshKey}
-    />
+ <StatCard
+ key={`${i}-${refreshKey}`}
+ {...stat}
+ delay={i}
+ refreshKey={refreshKey}
+ />
 
-  )
+ )
 )}
 
  </div>
@@ -2988,32 +2988,32 @@ const finalTableData =
 
  <div className="flex items-center justify-between mb-6">
 
-  <h3
-    className="text-sm font-semibold"
-    style={{
-      color:
-        theme.colors.textPrimary
-    }}
-  >
-    Candidates Overview
-  </h3>
+ <h3
+ className="text-sm font-semibold"
+ style={{
+ color:
+ theme.colors.textPrimary
+ }}
+ >
+ Candidates Overview
+ </h3>
 
-  <button
-    type="button"
-    onClick={() =>
-      navigate('/employee-workorder-dashboard')
-    }
-    className="px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:scale-105"
-    style={{
-      background:
-        'linear-gradient(135deg, #8B5CF6, #EC4899)',
-      color: '#ffffff',
-      boxShadow:
-        '0 4px 12px rgba(139,92,246,0.20)'
-    }}
-  >
-    View All
-  </button>
+ <button
+ type="button"
+ onClick={() =>
+ navigate('/employee-workorder-dashboard')
+ }
+ className="px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:scale-105"
+ style={{
+ background:
+ 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+ color: '#ffffff',
+ boxShadow:
+ '0 4px 12px rgba(139,92,246,0.20)'
+ }}
+ >
+ View All
+ </button>
 
 </div>
 
@@ -3038,11 +3038,11 @@ const finalTableData =
  >
 
  {[
-  'CLIENT',
-  'CANDIDATE NAME',
-  'CHECKS',
-  'STATUS',
-  'REFERENCE'
+ 'CLIENT',
+ 'CANDIDATE NAME',
+ 'CHECKS',
+ 'STATUS',
+ 'REFERENCE'
 ].map(
  (h, index) => (
 
