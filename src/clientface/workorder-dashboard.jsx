@@ -1051,14 +1051,14 @@ const WorkorderDashboard = () => {
   const fetchWorkorders = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/workorders');
+     const response = await api.get('/api/workorders');
       if (response.data.success) {
         setWorkorders(response.data.workorders || []);
         if (response.data.stats) setStats(response.data.stats);
       }
     } catch (error) {
       console.error('Failed to fetch workorders:', error);
-      alert('Failed to load workorders. Please ensure backend is running on port 5000.');
+     alert('Failed to load workorders. Please check the backend API.');
     } finally {
       setLoading(false);
     }
@@ -1086,7 +1086,9 @@ const WorkorderDashboard = () => {
 
     setLockingId(wo._id);
     try {
-      const res = await api.put(`/workorders/${wo._id}/lock`, { locked: !wo.locked });
+      const res = await api.put(`/api/workorders/${wo._id}/lock`, {
+  locked: !wo.locked
+});
       if (res.data.success) {
         await fetchWorkorders();
       } else {
@@ -1103,7 +1105,7 @@ const WorkorderDashboard = () => {
   const handleDeleteClick = (id) => { setDeletingId(id); setIsDeleteModalOpen(true); };
   const confirmDelete = async () => {
     try {
-      await api.delete(`/workorders/${deletingId}`);
+      await api.delete(`/api/workorders/${deletingId}`);
       alert('Workorder deleted successfully');
       await fetchWorkorders();
     } catch (error) {
@@ -1159,7 +1161,7 @@ const WorkorderDashboard = () => {
     }
     setIsStoppingWorkorder(true);
     try {
-      const res = await api.put(`/workorders/${stopWorkorderModal.wo._id}/stop`, {
+      const res = await api.put(`/api/workorders/${stopWorkorderModal.wo._id}/stop`, {
         reason: stopWorkorderReason.trim(),
         stoppedBy: getActorIdentity(),
       });
@@ -1202,7 +1204,8 @@ const WorkorderDashboard = () => {
     }
     setIsStoppingCheck(true);
     try {
-      const res = await api.put(`/workorders/${stopCheckModal.wo._id}/checks/${stopCheckModal.check.slNo}/stop`, {
+      const res = await api.put(
+  `/api/workorders/${stopCheckModal.wo._id}/checks/${stopCheckModal.check.slNo}/stop`, {
         reason: stopCheckReason.trim(),
         stoppedBy: getActorIdentity(),
       });
