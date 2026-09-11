@@ -988,12 +988,12 @@
           )}
           {ticket.status !== "closed" ? (
             <form onSubmit={onSubmitReply} className="space-y-3 pt-3 border-t" style={{ borderColor: "#e5e7eb" }}>
-              <h4 className="text-[10px] font-semibold uppercase text-gray-500">Reply</h4>
-              <textarea rows={4} placeholder="Type your reply..." value={replyText} onChange={(e) => setReplyText(e.target.value)} onKeyDown={(e) => { e.stopPropagation(); }}
+              {/* <h4 className="text-[10px] font-semibold uppercase text-gray-500">Reply</h4> */}
+              {/* <textarea rows={4} placeholder="Type your reply..." value={replyText} onChange={(e) => setReplyText(e.target.value)} onKeyDown={(e) => { e.stopPropagation(); }}
                 className="w-full px-3 py-2.5 rounded-xl text-sm border outline-none focus:ring-1 focus:ring-amber-400 resize-none"
                 style={{ borderColor: "#e5e7eb", direction: "ltr", textAlign: "left", writingMode: "horizontal-tb" }}
                 required={replyFiles.length === 0}
-              />
+              /> */}
               <div className="space-y-2">
                 <input ref={replyFileRef} type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip" className="hidden"
                   onChange={(e) => {
