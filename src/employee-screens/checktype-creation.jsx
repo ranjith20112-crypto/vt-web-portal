@@ -31,7 +31,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import api from '../apiroute/apiroute';
 import Header from '../screens/header';
-
 const CheckTypes = () => {
     const navigate = useNavigate();
     const [checkTypes, setCheckTypes] = useState([]);
@@ -57,6 +56,7 @@ const CheckTypes = () => {
     const [subCheckInput, setSubCheckInput] = useState('');
     const [focusedField, setFocusedField] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
 
     // ─── Sub-check edit/delete state ──────────────────────────────────
     const [subChecksData, setSubChecksData] = useState([]); // full sub-check records from backend
@@ -73,7 +73,7 @@ const CheckTypes = () => {
     const fetchCheckTypes = async () => {
         try {
             setLoading(true);
-            const res = await api.get('/checktypes');
+            const res = await api.get('/api/checktypes');
             if (res.data.success) {
                 setCheckTypes(res.data.checkTypes.map(c => ({
                     ...c,
@@ -93,7 +93,7 @@ const CheckTypes = () => {
     // ─── Fetch full sub-check records (for edit/delete) ───────────────
     const fetchSubChecks = async () => {
         try {
-            const res = await api.get('/subchecktypes');
+            const res = await api.get('/api/subchecktypes');
             if (res.data.success) {
                 setSubChecksData(res.data.subChecks.map(s => ({ ...s, id: s._id })));
             }
@@ -171,7 +171,7 @@ const CheckTypes = () => {
         e.preventDefault(); if (!validateForm()) return; setIsSubmitting(true);
         try {
             if (editingCheck) {
-                const res = await api.put(`/checktypes/${editingCheck.id}`, {
+                const res = await api.put(`/api/checktypes/${editingCheck.id}`, {
                     name: formData.name,
                     description: formData.description,
                     sla: Number(formData.sla),
@@ -185,7 +185,7 @@ const CheckTypes = () => {
                     setNotification({ type: 'success', message: 'Updated successfully!' });
                 }
             } else {
-                const res = await api.post('/checktype/create', {
+                const res = await api.post('/api/checktype/create', {
                     code: formData.code,
                     name: formData.name,
                     description: formData.description,
@@ -214,7 +214,7 @@ const CheckTypes = () => {
     const handleSubCheckSubmit = async (e) => {
         e.preventDefault(); if (!validateSubCheckForm()) return; setIsSubmitting(true);
         try {
-            const res = await api.post('/subchecktype/create', {
+            const res = await api.post('/api/subchecktype/create', {
                 code: formData.code,
                 name: formData.name.trim(),
                 parentCheck: formData.parentCheck,
@@ -241,7 +241,7 @@ const CheckTypes = () => {
     const handleSubEditSubmit = async (e) => {
         e.preventDefault(); if (!validateSubEditForm()) return; setIsSubmitting(true);
         try {
-            const res = await api.put(`/subchecktypes/${editingSubCheck.id}`, {
+            const res = await api.put(`/api/subchecktypes/${editingSubCheck.id}`, {
                 code: subEditForm.code,
                 name: subEditForm.name.trim(),
                 dataInputMode: subEditForm.dataInputMode,
@@ -268,7 +268,7 @@ const CheckTypes = () => {
     const handleSubCheckDelete = async (sub) => {
         if (!window.confirm(`Delete sub-check "${sub.name}"?`)) return;
         try {
-            const res = await api.delete(`/subchecktypes/${sub.id}`);
+            const res = await api.delete(`/api/subchecktypes/${sub.id}`);
             if (res.data.success) {
                 await fetchCheckTypes();
                 await fetchSubChecks();
@@ -286,7 +286,7 @@ const CheckTypes = () => {
     const handleDeleteClick = async (id) => {
         if (!window.confirm('Delete this check type?')) return;
         try {
-            const res = await api.delete(`/checktypes/${id}`);
+            const res = await api.delete(`/api/checktypes/${id}`);
             if (res.data.success) {
                 await fetchCheckTypes();
                 await fetchSubChecks();
