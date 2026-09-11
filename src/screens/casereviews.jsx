@@ -576,7 +576,7 @@ const CaseReview = () => {
   const fetchCases = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/workorders");
+      const res = await api.get("/api/workorders");
       const rawData = Array.isArray(res.data)
         ? res.data
         : res.data?.workorders || res.data?.data || res.data?.cases || [];
@@ -703,7 +703,7 @@ const CaseReview = () => {
     if (!noteText.trim()) { showNotification("error", "Please write a note before saving."); return; }
     setIsSavingNote(true);
     try {
-      await api.put(`/workorders/${noteTarget.workorderId}`, {
+      await api.put(`/api/workorders/${noteTarget.workorderId}`, {
         $push: {
           reviewNotes: {
             text: noteText.trim(),
@@ -727,7 +727,7 @@ const CaseReview = () => {
   const downloadReport = async (caseRow) => {
     setDownloadingId(caseRow.workorderId);
     try {
-      const res = await api.get(`/workorders/${caseRow.workorderId}/report`, { responseType: "blob" });
+      const res = await api.get(`/api/workorders/${caseRow.workorderId}/report`, { responseType: "blob" });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
