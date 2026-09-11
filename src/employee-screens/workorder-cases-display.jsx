@@ -36,7 +36,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../apiroute/apiroute';
 import Header from '../screens/header';
 import { Field, CheckboxField, FileUpload, CardHeader, SectionTitle } from '../DE/formcontrols';
-import CheckFormRouter from '../DE/checkformrouter';
+import CheckFormRouter from '../DE/checkformrouter'
 
 // ---- Status visual mapping ----
 const STATUS_STYLES = {
@@ -348,7 +348,7 @@ const EmployeeWorkorderDashboard = () => {
   const fetchWorkorders = async () => {
     try {
       setLoading(true);
-      const res = await api.get('/workorders');
+      const res = await api.get('/api/workorders');
       if (res.data.success) {
         const data = res.data.workorders || [];
         setWorkorders(data);
@@ -370,7 +370,7 @@ const EmployeeWorkorderDashboard = () => {
 
   const fetchCheckTypeMaster = async () => {
     try {
-      const res = await api.get('/checktypes');
+      const res = await api.get('/api/checktypes');
       const raw = res.data?.success ? res.data.checkTypes : [];
       setCheckTypeMaster(raw.map((c) => ({ ...c, id: c._id })));
     } catch (err) {
@@ -453,7 +453,7 @@ const EmployeeWorkorderDashboard = () => {
 
     try {
       const params = subCheckId ? { subCheckId } : {};
-      const res = await api.get(`/customfields/by-checktype/${checkTypeId}`, { params });
+      const res = await api.get(`/api/customfields/by-checktype/${checkTypeId}`, { params });
       const fields = res.data?.success
         ? (res.data.fields || []).map(normalizeCustomField)
         : [];
@@ -561,7 +561,7 @@ const EmployeeWorkorderDashboard = () => {
     if (!deleteTarget?._id) return;
     setIsDeleting(true);
     try {
-      const res = await api.delete(`/workorders/${deleteTarget._id}`);
+      const res = await api.delete(`/api/workorders/${deleteTarget._id}`);
       if (res.data?.success !== false) {
         setWorkorders(prev => prev.filter(w => w._id !== deleteTarget._id));
         showNotification('success', 'Workorder deleted');
@@ -725,7 +725,7 @@ const EmployeeWorkorderDashboard = () => {
         checks: editForm.checks,
       };
 
-      const res = await api.put(`/workorders/${editTarget._id}`, payload);
+      const res = await api.put(`/api/workorders/${editTarget._id}`, payload);
 
       if (res.data?.success === false) {
         setSaveError(res.data?.message || 'Failed to update workorder.');
@@ -743,7 +743,7 @@ const EmployeeWorkorderDashboard = () => {
           Object.entries(editFiles).forEach(([key, file]) => {
             if (file) fd.append(key, file);
           });
-          const fileRes = await api.put(`/workorders/${editTarget._id}/candidate`, fd, {
+          const fileRes = await api.put(`/api/workorders/${editTarget._id}/candidate`, fd, {
             headers: { 'Content-Type': 'multipart/form-data' },
           });
           if (fileRes.data?.success && fileRes.data.workorder) {
