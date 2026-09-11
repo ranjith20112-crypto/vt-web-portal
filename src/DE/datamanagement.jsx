@@ -256,7 +256,7 @@ const DataManagement = () => {
       if (assignFilter === 'unassigned') params.unassigned = 'true';
       if (searchQuery) params.search = searchQuery;
 
-      const res = await api.get('/data-management', { params });
+      const res = await api.get('/api/data-management', { params });
       if (res.data.success) {
         setRows(res.data.rows || []);
         setStats(res.data.stats || {});
@@ -272,7 +272,7 @@ const DataManagement = () => {
   const fetchHolds = useCallback(async () => {
     setHoldsLoading(true);
     try {
-      const res = await api.get('/data-management/holds/list');
+      const res = await api.get('/api/data-management/holds/list');
       if (res.data.success) {
         setCheckHolds(res.data.checkHolds || []);
         setCaseHolds(res.data.caseHolds || []);
@@ -288,7 +288,7 @@ const DataManagement = () => {
   const fetchStopped = useCallback(async () => {
     setStoppedLoading(true);
     try {
-      const res = await api.get('/data-management/stopped/list');
+      const res = await api.get('/api/data-management/stopped/list');
       if (res.data.success) {
         setStoppedChecks(res.data.stoppedChecks || []);
         setStoppedWorkorders(res.data.stoppedWorkorders || []);
@@ -303,7 +303,7 @@ const DataManagement = () => {
 
   const fetchAssignees = useCallback(async () => {
     try {
-      const res = await api.get('/data-management/assignees/list');
+      const res = await api.get('/api/data-management/assignees/list');
       if (res.data.success) {
         setAssignees({ internal: res.data.internal || [], external: res.data.external || [] });
       }
@@ -382,7 +382,7 @@ const DataManagement = () => {
     setIsAssigning(true);
     try {
       const res = await api.put(
-        `/data-management/${assignTarget.workorderId}/checks/${assignTarget.slNo}/assign`,
+        `/api/data-management/${assignTarget.workorderId}/checks/${assignTarget.slNo}/assign`,
         {
           assignedToId: person.id,
           assignedToName: person.name,
@@ -425,7 +425,7 @@ const DataManagement = () => {
     setIsRaisingInsufficiency(true);
     try {
       const res = await api.put(
-        `/data-management/${insufficiencyTarget.workorderId}/checks/${insufficiencyTarget.slNo}/insufficiency`,
+        `/api/data-management/${insufficiencyTarget.workorderId}/checks/${insufficiencyTarget.slNo}/insufficiency`,
         { description: insufficiencyDescription.trim() }
       );
       if (res.data.success) {
@@ -464,7 +464,7 @@ const DataManagement = () => {
     setIsRaisingCheckHold(true);
     try {
       const res = await api.put(
-        `/data-management/${checkHoldTarget.workorderId}/checks/${checkHoldTarget.slNo}/hold`,
+        `/api/data-management/${checkHoldTarget.workorderId}/checks/${checkHoldTarget.slNo}/hold`,
         { reason: checkHoldReason.trim(), raisedBy: getEmployeeIdentity() }
       );
       if (res.data.success) {
@@ -502,7 +502,7 @@ const DataManagement = () => {
 
     setIsRaisingCaseHold(true);
     try {
-      const res = await api.put(`/data-management/${caseHoldTarget.workorderId}/case-hold`, {
+      const res = await api.put(`/api/data-management/${caseHoldTarget.workorderId}/case-hold`, {
         reason: caseHoldReason.trim(),
         raisedBy: getEmployeeIdentity(),
       });
@@ -541,7 +541,7 @@ const DataManagement = () => {
     setIsStoppingCheck(true);
     try {
       const res = await api.put(
-        `/data-management/${stopCheckTarget.workorderId}/checks/${stopCheckTarget.slNo}/stop`,
+        `/api/data-management/${stopCheckTarget.workorderId}/checks/${stopCheckTarget.slNo}/stop`,
         { reason: stopCheckReason.trim(), stoppedBy: getEmployeeIdentity() }
       );
       if (res.data.success) {
@@ -578,7 +578,7 @@ const DataManagement = () => {
     }
     setIsStoppingCase(true);
     try {
-      const res = await api.put(`/data-management/${stopCaseTarget.workorderId}/stop`, {
+      const res = await api.put(`/api/data-management/${stopCaseTarget.workorderId}/stop`, {
         reason: stopCaseReason.trim(),
         stoppedBy: getEmployeeIdentity(),
       });
@@ -601,7 +601,7 @@ const DataManagement = () => {
     const key = `${row.workorderId}-${row.slNo}`;
     setResumingKey(key);
     try {
-      const res = await api.put(`/data-management/${row.workorderId}/checks/${row.slNo}/hold/clear`);
+      const res = await api.put(`/api/data-management/${row.workorderId}/checks/${row.slNo}/hold/clear`);
       if (res.data.success) {
         showNotification('success', 'Check hold cleared — moved back to Data Management.');
         fetchHolds();
@@ -618,7 +618,7 @@ const DataManagement = () => {
   const resumeCaseHold = async (caseRow) => {
     setResumingKey(caseRow.workorderId);
     try {
-      const res = await api.put(`/data-management/${caseRow.workorderId}/case-hold/clear`);
+      const res = await api.put(`/api/data-management/${caseRow.workorderId}/case-hold/clear`);
       if (res.data.success) {
         showNotification('success', 'Case hold cleared — workorder moved back to Data Management.');
         fetchHolds();
@@ -637,7 +637,7 @@ const DataManagement = () => {
     setModalMode(row.stopped ? 'view' : mode);
     setIsLoadingDetail(true);
     try {
-      const res = await api.get(`/data-management/${row.workorderId}`);
+      const res = await api.get(`/api/data-management/${row.workorderId}`);
       if (res.data.success) {
         const wo = res.data.workorder;
         const check = (wo.checks || []).find((c) => String(c.slNo) === String(row.slNo));
@@ -668,7 +668,7 @@ const DataManagement = () => {
     try {
       const mergedData = { ...(activeCheck.data || {}), [STRUCTURED_KEY]: structuredData };
       const res = await api.put(
-        `/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/data`,
+        `/api/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/data`,
         { data: mergedData, status: checkStatus, notes: checkNotes }
       );
       if (!res.data.success) {
@@ -678,7 +678,7 @@ const DataManagement = () => {
 
       if (andComplete) {
         const completeRes = await api.put(
-          `/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/complete`
+          `/api/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/complete`
         );
         if (!completeRes.data.success) {
           showNotification('error', completeRes.data.message || 'Failed to mark complete.');
