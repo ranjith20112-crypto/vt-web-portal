@@ -436,8 +436,8 @@ const CreateWorkorder = () => {
       setLoadingChecks(true);
       try {
         const [packagesRes, checksRes] = await Promise.all([
-          api.get('/packages'),
-          api.get('/checktypes'),
+          api.get('/api/packages'),
+          api.get('/api/checktypes'),
         ]);
         const rawPackages = packagesRes.data.success ? packagesRes.data.packages : [];
         setPackages(rawPackages.map((p) => ({ ...p, id: p._id, checkComponents: p.checkComponents || [] })));
@@ -459,7 +459,7 @@ const CreateWorkorder = () => {
 
     try {
       const params = subCheckId ? { subCheckId } : {};
-      const res = await api.get(`/customfields/by-checktype/${checkTypeId}`, { params });
+      const res = await api.get(`/api/customfields/by-checktype/${checkTypeId}`, { params });
       const fields = res.data?.success ? (res.data.fields || []).map(normalizeCustomField) : [];
       setCustomFieldsCache((prev) => ({ ...prev, [key]: fields }));
       return fields;
@@ -477,7 +477,7 @@ const CreateWorkorder = () => {
     const loadForEdit = async () => {
       setLoadingEdit(true);
       try {
-        const res = await api.get(`/workorders/${editId}`);
+        const res = await api.get(`/api/workorders/${editId}`);
         if (cancelled) return;
 
         if (res.data.success) {
@@ -648,7 +648,7 @@ const CreateWorkorder = () => {
     try {
       const fd = new FormData();
       fd.append(fieldName, file);
-      const res = await api.post(`/workorders/${savedWorkorder._id}/checks/${slNo}/documents`, fd, {
+      const res = await api.post(`/api/workorders/${savedWorkorder._id}/checks/${slNo}/documents`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (res.data.success) {
@@ -792,7 +792,7 @@ const CreateWorkorder = () => {
       const checksPayload = buildChecksPayload();
 
       if (savedWorkorder?._id) {
-        const res = await api.put(`/workorders/${savedWorkorder._id}`, {
+        const res = await api.put(`/api/workorders/${savedWorkorder._id}`, {
           ...form,
           checks: checksPayload,
         });
@@ -821,7 +821,7 @@ const CreateWorkorder = () => {
           status: 'draft',
         };
 
-        const res = await api.post('/workorders', payload);
+        const res = await api.post('/api/workorders', payload);
         if (res.data.success) {
           setSavedWorkorder(res.data.workorder);
           setPhase('candidate');
@@ -845,7 +845,7 @@ const CreateWorkorder = () => {
         const notStarted = !currentStatus || currentStatus === 'pending' || currentStatus === 'draft';
         if (!notStarted) return;
         try {
-          const res = await api.put(`/workorders/${workorder._id}/checks/${c.slNo}`, {
+          const res = await api.put(`/api/workorders/${workorder._id}/checks/${c.slNo}`, {
             data: c.data || {},
             status: 'assignment-pending',
             notes: c.notes || '',
@@ -872,7 +872,7 @@ const CreateWorkorder = () => {
         if (file) fd.append(key, file);
       });
 
-      const res = await api.put(`/workorders/${savedWorkorder._id}/candidate`, fd, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/candidate`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (res.data.success) {
@@ -900,7 +900,7 @@ const CreateWorkorder = () => {
     const slKey = String(slNo);
     setSavingCheckSlNo(slKey);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/checks/${slNo}`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/checks/${slNo}`, {
         data: checkData[slKey] || {},
         status: checkMeta[slKey]?.status || 'assignment-pending',
         notes: checkMeta[slKey]?.notes || '',
@@ -923,7 +923,7 @@ const CreateWorkorder = () => {
     }
     setIsSaving(true);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}`, {
         status: 'submitted',
       });
       if (res.data.success) {
@@ -944,10 +944,10 @@ const CreateWorkorder = () => {
     }
     setIsSendingInvite(true);
     try {
-      const submitRes = await api.put(`/workorders/${savedWorkorder._id}`, { status: 'submitted' });
+      const submitRes = await api.put(`/api/workorders/${savedWorkorder._id}`, { status: 'submitted' });
       if (!submitRes.data.success) throw new Error('Submit failed');
 
-      const inviteRes = await api.post(`/workorders/${savedWorkorder._id}/send-invite`, {
+      const inviteRes = await api.post(`/api/workorders/${savedWorkorder._id}/send-invite`, {
         email: savedWorkorder.email || form.email,
         phone: savedWorkorder.phone || form.phone,
         fullName: savedWorkorder.fullName || form.fullName,
@@ -975,7 +975,7 @@ const CreateWorkorder = () => {
     if (!holdCheckReason.trim()) return alert('Please provide a reason.');
     setIsHoldingCheck(true);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/checks/${holdCheckModal.slNo}/hold`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/checks/${holdCheckModal.slNo}/hold`, {
         reason: holdCheckReason.trim(),
         raisedBy: getClientIdentity(),
       });
@@ -997,7 +997,7 @@ const CreateWorkorder = () => {
   const handleResumeCheck = async (slNo) => {
     if (!savedWorkorder?._id) return;
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/checks/${slNo}/hold/clear`);
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/checks/${slNo}/hold/clear`);
       if (res.data.success) {
         setSavedWorkorder(res.data.workorder);
         alert('Check hold cleared.');
@@ -1017,7 +1017,7 @@ const CreateWorkorder = () => {
     if (!holdCaseReason.trim()) return alert('Please provide a reason.');
     setIsHoldingCase(true);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/case-hold`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/case-hold`, {
         reason: holdCaseReason.trim(),
         raisedBy: getClientIdentity(),
       });
@@ -1039,7 +1039,7 @@ const CreateWorkorder = () => {
   const handleResumeCase = async () => {
     if (!savedWorkorder?._id) return;
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/case-hold/clear`);
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/case-hold/clear`);
       if (res.data.success) {
         setSavedWorkorder(res.data.workorder);
         alert('Workorder hold cleared.');
@@ -1059,7 +1059,7 @@ const CreateWorkorder = () => {
     if (!stopCheckReason.trim()) return alert('Please provide a reason.');
     setIsStoppingCheck(true);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/checks/${stopCheckModal.slNo}/stop`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/checks/${stopCheckModal.slNo}/stop`, {
         reason: stopCheckReason.trim(),
         stoppedBy: getClientIdentity(),
       });
@@ -1086,7 +1086,7 @@ const CreateWorkorder = () => {
     if (!stopCaseReason.trim()) return alert('Please provide a reason.');
     setIsStoppingCase(true);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/stop`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/stop`, {
         reason: stopCaseReason.trim(),
         stoppedBy: getClientIdentity(),
       });
@@ -1131,7 +1131,7 @@ const CreateWorkorder = () => {
       fd.append('documentType', uploadDocType);
       if (uploadDocCheckSlNo) fd.append('checkSlNo', uploadDocCheckSlNo);
 
-      const res = await api.post(`/workorders/${savedWorkorder._id}/documents`, fd, {
+      const res = await api.post(`/api/workorders/${savedWorkorder._id}/documents`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (res.data.success) {
@@ -1151,7 +1151,7 @@ const CreateWorkorder = () => {
     if (!savedWorkorder?._id) return;
     if (!window.confirm('Remove this document?')) return;
     try {
-      const res = await api.delete(`/workorders/${savedWorkorder._id}/documents/${docId}`);
+      const res = await api.delete(`/api/workorders/${savedWorkorder._id}/documents/${docId}`);
       if (res.data.success) {
         setSavedWorkorder(res.data.workorder);
       }
