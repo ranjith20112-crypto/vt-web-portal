@@ -725,7 +725,7 @@ const FieldVisit = () => {
   const fetchVisits = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/field-visits");
+      const res = await api.get("/api/field-visits");
       const raw = Array.isArray(res.data)
         ? res.data
         : res.data?.fieldVisits || res.data?.data || res.data?.visits || [];
@@ -905,7 +905,7 @@ const FieldVisit = () => {
     }
     setIsSavingNote(true);
     try {
-      await api.put(`/field-visits/${noteTarget.visitId}`, {
+      await api.put(`/api/field-visits/${noteTarget.visitId}`, {
         $push: {
           reviewNotes: {
             text: noteText.trim(),
@@ -932,7 +932,7 @@ const FieldVisit = () => {
   const downloadReport = async (vr) => {
     setDownloadingId(vr.visitId);
     try {
-      const res = await api.get(`/field-visits/${vr.visitId}/report`, {
+      const res = await api.get(`/api/field-visits/${vr.visitId}/report`, {
         responseType: "blob",
       });
       const url = window.URL.createObjectURL(new Blob([res.data]));
