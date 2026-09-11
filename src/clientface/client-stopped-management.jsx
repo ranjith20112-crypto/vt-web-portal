@@ -90,7 +90,7 @@ const ClientStoppedManagement = () => {
   const fetchStopped = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get('/client/workorders/stopped/list', { params: clientParams });
+      const res = await api.get('/api/client/workorders/stopped/list', { params: clientParams });
       if (res.data.success) {
         setStoppedChecks(res.data.stoppedChecks || []);
         setStoppedWorkorders(res.data.stoppedWorkorders || []);
