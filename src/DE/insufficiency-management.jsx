@@ -123,7 +123,7 @@ const InsufficiencyManagement = () => {
       const params = { status: 'insufficient' };
       if (searchQuery) params.search = searchQuery;
 
-      const res = await api.get('/data-management', { params });
+      const res = await api.get('/api/data-management', { params });
       if (res.data.success) {
         let list = res.data.rows || [];
         if (modeFilter !== 'all') {
@@ -142,7 +142,7 @@ const InsufficiencyManagement = () => {
 
   const fetchAssignees = useCallback(async () => {
     try {
-      const res = await api.get('/data-management/assignees/list');
+      const res = await api.get('/api/data-management/assignees/list');
       if (res.data.success) {
         setAssignees({ internal: res.data.internal || [], external: res.data.external || [] });
       }
@@ -186,7 +186,7 @@ const InsufficiencyManagement = () => {
     setIsAssigning(true);
     try {
       const res = await api.put(
-        `/data-management/${assignTarget.workorderId}/checks/${assignTarget.slNo}/assign`,
+        `/api/data-management/${assignTarget.workorderId}/checks/${assignTarget.slNo}/assign`,
         {
           assignedToId: person.id,
           assignedToName: person.name,
@@ -216,7 +216,7 @@ const InsufficiencyManagement = () => {
     setModalMode(mode);
     setIsLoadingDetail(true);
     try {
-      const res = await api.get(`/data-management/${row.workorderId}`);
+      const res = await api.get(`/api/data-management/${row.workorderId}`);
       if (res.data.success) {
         const wo = res.data.workorder;
         const check = (wo.checks || []).find((c) => String(c.slNo) === String(row.slNo));
@@ -249,7 +249,7 @@ const InsufficiencyManagement = () => {
     try {
       const mergedData = { ...(activeCheck.data || {}), [STRUCTURED_KEY]: structuredData };
       const res = await api.put(
-        `/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/data`,
+        `/api/data-management/${activeRow.workorderId}/checks/${activeRow.slNo}/data`,
         { data: mergedData, notes: checkNotes }
       );
       if (!res.data.success) {
@@ -275,7 +275,7 @@ const InsufficiencyManagement = () => {
     setIsClearing(true);
     try {
       const res = await api.put(
-        `/data-management/${target.workorderId}/checks/${target.slNo}/insufficiency/clear`
+        `/api/data-management/${target.workorderId}/checks/${target.slNo}/insufficiency/clear`
       );
       if (res.data.success) {
         showNotification('success', 'Insufficiency cleared — check moved back to Data Management.');
