@@ -2476,7 +2476,7 @@ export default function BGVDashboard() {
   useEffect(() => {
     let c = false;
     const fetch = async () => {
-      try { setLoadingCheckTypes(true); const r = await api.get('/verifications/checktypes'); if (!c && r.data.success) setDynamicCheckTypes(r.data.checkTypes || []); } catch {} finally { if (!c) setLoadingCheckTypes(false); }
+      try { setLoadingCheckTypes(true); const r = await api.get('/api/verifications/checktypes'); if (!c && r.data.success) setDynamicCheckTypes(r.data.checkTypes || []); } catch {} finally { if (!c) setLoadingCheckTypes(false); }
     };
     fetch();
     return () => { c = true; };
