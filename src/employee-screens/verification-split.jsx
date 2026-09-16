@@ -79,59 +79,59 @@ const TERMINAL_STATUSES = ['completed', 'verified', 'discrepancy', 'insufficient
 /* ───────── API helpers ───────── */
 
 async function fetchQueue({ checkTypeId, stage, page, search, assignedToId }) {
-  const res = await api.get(`/verifications/${checkTypeId}/${stage}`, {
+  const res = await api.get(`/api/verifications/${checkTypeId}/${stage}`, {
     params: { page, limit: PAGE_SIZE, search, assignedToId },
   });
   return res.data;
 }
 
 async function fetchOverall({ page, search, checkTypeId, assignedToId, status }) {
-  const res = await api.get('/verifications/overall', {
+  const res = await api.get('/api/verifications/overall', {
     params: { page, limit: PAGE_SIZE, search, checkTypeId, assignedToId, status },
   });
   return res.data;
 }
 
 async function fetchCheckTypeInfo(checkTypeId) {
-  const res = await api.get(`/checktypes/${checkTypeId}`);
+  const res = await api.get(`/api/checktypes/${checkTypeId}`);
   return res.data;
 }
 
 async function fetchAllCheckTypes() {
-  const res = await api.get('/verifications/checktypes');
+  const res = await api.get('/api/verifications/checktypes');
   return res.data;
 }
 
 async function fetchEmployeesList() {
-  const res = await api.get('/employees');
+  const res = await api.get('/api/employees');
   return res.data;
 }
 
 async function assignCheck(payload) {
-  const res = await api.post('/verifications/assign', payload);
+  const res = await api.post('/api/verifications/assign', payload);
   return res.data;
 }
 
 async function completeCheck(payload) {
-  const res = await api.post('/verifications/complete', payload);
+  const res = await api.post('/api/verifications/complete', payload);
   return res.data;
 }
 
 // NEW — Completed Verifications tab (only checks not yet in the QC
 // pipeline) and the Move-to-QC action. Backed by routes/qcRoutes.js.
 async function fetchCompletedForQC({ checkTypeId, search }) {
-  const res = await api.get('/qc/completed/list', { params: { checkTypeId, search } });
+  const res = await api.get('/api/qc/completed/list', { params: { checkTypeId, search } });
   return res.data;
 }
 
 async function moveCheckToQC({ workorderId, checkSlNo, movedBy }) {
-  const res = await api.put(`/qc/${workorderId}/checks/${checkSlNo}/move-to-qc`, { movedBy });
+  const res = await api.put(`/api/qc/${workorderId}/checks/${checkSlNo}/move-to-qc`, { movedBy });
   return res.data;
 }
 
 // NEW — QC Request tab: checks a QC reviewer sent back for rework.
 async function fetchQcRejected({ checkTypeId, search }) {
-  const res = await api.get('/qc/rejected/list', { params: { checkTypeId, search } });
+  const res = await api.get('/api/qc/rejected/list', { params: { checkTypeId, search } });
   return res.data;
 }
 
@@ -241,12 +241,12 @@ function AssignModal({ row, checkTypeName, onClose, onSubmit, submitting, errorM
       try {
         if (assignType === 'internal') {
           if (employees.length === 0) {
-            const res = await api.get('/employees');
+            const res = await api.get('/api/employees');
             setEmployees(res.data?.employees || []);
           }
         } else {
           if (vendors.length === 0) {
-            const res = await api.get('/vendors');
+            const res = await api.get('/api/vendors');
             setVendors(res.data?.vendors || []);
           }
         }
