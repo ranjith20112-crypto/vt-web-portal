@@ -211,12 +211,12 @@ const AssignCheckModal = ({ isOpen, onClose, workorder, onAssigned }) => {
             try {
                 if (assignType === 'internal') {
                     if (employees.length === 0) {
-                        const res = await api.get('/employees');
+                        const res = await api.get('/api/employees');
                         setEmployees(res.data?.employees || []);
                     }
                 } else {
                     if (vendors.length === 0) {
-                        const res = await api.get('/vendors');
+                        const res = await api.get('/api/vendors');
                         setVendors(res.data?.vendors || []);
                     }
                 }
@@ -270,7 +270,7 @@ const AssignCheckModal = ({ isOpen, onClose, workorder, onAssigned }) => {
         setSubmitting(true);
         setError('');
         try {
-            await api.post('/workorder-assignment', {
+            await api.post('/api/workorder-assignment', {
                 workorderId: workorder._id,
                 bgvRef: workorder.bgvRef,
                 candidateName: workorder.candidateName,
