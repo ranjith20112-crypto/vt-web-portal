@@ -142,7 +142,7 @@ const Universities = () => {
   const fetchUniversities = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/universities');
+      const response = await api.get('/api/universities');
       if (response.data.success) {
         setUniversities(response.data.universities || []);
       }
@@ -173,10 +173,10 @@ const Universities = () => {
     setIsSubmitting(true);
     try {
       if (editingId) {
-        await api.put(`/universities/${editingId}`, formData);
+        await api.put(`/api/universities/${editingId}`, formData);
         alert('University updated successfully!');
       } else {
-        await api.post('/universities', formData);
+        await api.post('/api/universities', formData);
         alert('University created successfully!');
       }
       await fetchUniversities();
@@ -217,7 +217,7 @@ const Universities = () => {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/universities/${deletingId}`);
+      await api.delete(`/api/universities/${deletingId}`);
       alert('University deleted successfully');
       await fetchUniversities();
     } catch (error) {
