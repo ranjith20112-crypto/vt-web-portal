@@ -18,17 +18,17 @@ import api from '../apiroute/apiroute';
 import Header from '../screens/header';
 
 async function fetchQcAssignmentList(status, search) {
-  const res = await api.get('/qc/assignment/list', { params: { status, search } });
+  const res = await api.get('/api/qc/assignment/list', { params: { status, search } });
   return res.data;
 }
 
 async function fetchAssignees() {
-  const res = await api.get('/qc/assignment/assignees');
+  const res = await api.get('/api/qc/assignment/assignees');
   return res.data;
 }
 
 async function assignQc(payload) {
-  const res = await api.post('/qc/assignment/assign', payload);
+  const res = await api.post('/api/qc/assignment/assign', payload);
   return res.data;
 }
 
