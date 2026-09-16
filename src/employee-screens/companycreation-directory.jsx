@@ -143,7 +143,7 @@ const CompanyDirectory = () => {
   const fetchCompanies = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/company-directory');
+      const response = await api.get('/api/company-directory');
       if (response.data.success) {
         setCompanies(response.data.companies || []);
       }
@@ -170,10 +170,10 @@ const CompanyDirectory = () => {
     setIsSubmitting(true);
     try {
       if (editingId) {
-        await api.put(`/company-directory/${editingId}`, formData);
+        await api.put(`/api/company-directory/${editingId}`, formData);
         alert('Company updated successfully!');
       } else {
-        await api.post('/company-directory', formData);
+        await api.post('/api/company-directory', formData);
         alert('Company created successfully!');
       }
       await fetchCompanies();
@@ -212,7 +212,7 @@ const CompanyDirectory = () => {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/company-directory/${deletingId}`);
+      await api.delete(`/api/company-directory/${deletingId}`);
       alert('Company deleted successfully');
       await fetchCompanies();
     } catch (error) {
