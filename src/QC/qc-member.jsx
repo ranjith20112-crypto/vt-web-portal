@@ -5,11 +5,12 @@
    (qcStatus === 'assigned'). Clicking "Verify QC" opens a split-screen
    modal — LEFT side is everything captured during Data Management /
    candidate data entry (check.data.__structured), RIGHT side is
-   everything the verifier filled in (check.verifier) — so the QC
+   everything the verifier filled in (check.verifier) — so the QCapi
    reviewer can compare the two side by side before Approving or
    Rejecting.
 
-   "Viewing as" selector: since this project doesn't expose an auth
+   "Viewing as" selector: since this project doesn't expose an authVendor Master
+
    context to this component, the QC member is chosen from a dropdown
    (falls back to a value stored in localStorage under 'employeeId' if
    present, so it can be wired to real auth later with zero changes to
@@ -27,27 +28,27 @@ import api from '../apiroute/apiroute';
 import Header from '../screens/header';
 
 async function fetchMemberQueue({ assignedToId, checkTypeId, from, to, search }) {
-  const res = await api.get('/qc/member/list', { params: { assignedToId, checkTypeId, from, to, search } });
+  const res = await api.get('/api/qc/member/list', { params: { assignedToId, checkTypeId, from, to, search } });
   return res.data;
 }
 
 async function fetchMemberCompleted({ assignedToId, checkTypeId, from, to, search }) {
-  const res = await api.get('/qc/member/completed/list', { params: { assignedToId, checkTypeId, from, to, search } });
+  const res = await api.get('/api/qc/member/completed/list', { params: { assignedToId, checkTypeId, from, to, search } });
   return res.data;
 }
 
 async function fetchEmployeesList() {
-  const res = await api.get('/employees');
+  const res = await api.get('/api/employees');
   return res.data;
 }
 
 async function fetchQcDetail(workorderId, slNo) {
-  const res = await api.get(`/qc/${workorderId}/checks/${slNo}/detail`);
+  const res = await api.get(`/api/qc/${workorderId}/checks/${slNo}/detail`);
   return res.data;
 }
 
 async function submitQcVerify(workorderId, slNo, payload) {
-  const res = await api.put(`/qc/${workorderId}/checks/${slNo}/verify`, payload);
+  const res = await api.put(`/api/qc/${workorderId}/checks/${slNo}/verify`, payload);
   return res.data;
 }
 
@@ -349,7 +350,7 @@ export default function QCMemberScreen() {
 
   useEffect(() => {
     fetchEmployeesList().then((json) => setEmployees(json?.employees || [])).catch(() => {});
-    api.get('/verifications/checktypes').then((res) => setCheckTypes(res.data?.checkTypes || [])).catch(() => {});
+    api.get('/api/verifications/checktypes').then((res) => setCheckTypes(res.data?.checkTypes || [])).catch(() => {});
   }, []);
 
   const load = useCallback(async () => {
