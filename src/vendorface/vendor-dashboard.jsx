@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "./header";
-import theme from "../theme/theme";
+import theme from "../theme/theme"; 
 
 const VendorDashboard = () => {
   const navigate = useNavigate();
