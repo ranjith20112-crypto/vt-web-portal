@@ -82,7 +82,7 @@ const Departments = () => {
   const fetchDepartments = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/departments');
+      const res = await api.get('/api/departments');
       if (res.data.success) {
         setDepartments(res.data.departments.map(d => ({ ...d, id: d._id })));
       }
@@ -195,7 +195,7 @@ const Departments = () => {
     requestAnimationFrame(() => setShowUsersModal(true));
     setUsersLoading(true);
     try {
-      const res = await api.get(`/departments/${dept.id}/users`);
+      const res = await api.get(`/api/departments/${dept.id}/users`);
       if (res.data.success) setDeptUsersData(res.data.users || []);
     } catch (error) {
       console.error('Fetch dept users error:', error);
@@ -268,7 +268,7 @@ const Departments = () => {
     requestAnimationFrame(() => setShowTeamsModal(true));
     setTeamsLoading(true);
     try {
-      const res = await api.get(`/teams?departmentId=${dept.id}`);
+      const res = await api.get(`/api/teams?departmentId=${dept.id}`);
       if (res.data.success) setDeptTeamsData(res.data.teams.map(t => ({ ...t, id: t._id })));
     } catch (error) {
       console.error('Fetch dept teams error:', error);
@@ -344,7 +344,7 @@ const Departments = () => {
     setIsSubmitting(true);
     try {
       if (editingDept) {
-        const res = await api.put(`/departments/${editingDept.id}`, {
+        const res = await api.put(`/api/departments/${editingDept.id}`, {
           name: formData.name.trim(),
           active: formData.active
         });
@@ -353,7 +353,7 @@ const Departments = () => {
           setNotification({ type: 'success', message: 'Department updated successfully!' });
         }
       } else {
-        const res = await api.post('/departments', {
+        const res = await api.post('/api/departments', {
           name: formData.name.trim(),
           active: formData.active
         });
@@ -376,7 +376,7 @@ const Departments = () => {
   const handleDeleteClick = async (id) => {
     if (!window.confirm('Are you sure you want to delete this department?')) return;
     try {
-      const res = await api.delete(`/departments/${id}`);
+      const res = await api.delete(`/api/departments/${id}`);
       if (res.data.success) {
         await fetchDepartments();
         setNotification({ type: 'success', message: 'Department deleted successfully!' });
@@ -410,7 +410,7 @@ const Departments = () => {
     if (!validateTeamForm()) return;
     setIsSubmittingTeam(true);
     try {
-      const res = await api.post('/teams', {
+      const res = await api.post('/api/teams', {
         name: teamFormData.name.trim(),
         departmentId: teamFormData.departmentId,
         lead: teamFormData.lead,
