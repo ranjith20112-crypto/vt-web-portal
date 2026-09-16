@@ -246,7 +246,7 @@ const EmployeeBulkupload = () => {
       }
 
       try {
-        const res = await api.post('/employee/register', payload);
+        const res = await api.post('/api/employee/register', payload);
         if (res.data && res.data.success) {
           imported++;
         } else {
