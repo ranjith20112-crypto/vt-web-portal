@@ -132,7 +132,7 @@ const Courts = () => {
   const fetchCourts = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/courts');
+      const response = await api.get('/api/courts');
       if (response.data.success) {
         setCourts(response.data.courts || []);
       }
@@ -163,10 +163,10 @@ const Courts = () => {
     setIsSubmitting(true);
     try {
       if (editingId) {
-        await api.put(`/courts/${editingId}`, formData);
+        await api.put(`/api/courts/${editingId}`, formData);
         alert('Court updated successfully!');
       } else {
-        await api.post('/courts', formData);
+        await api.post('/api/courts', formData);
         alert('Court created successfully!');
       }
       await fetchCourts();
@@ -201,7 +201,7 @@ const Courts = () => {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/courts/${deletingId}`);
+      await api.delete(`/api/courts/${deletingId}`);
       alert('Court deleted successfully');
       await fetchCourts();
     } catch (error) {
