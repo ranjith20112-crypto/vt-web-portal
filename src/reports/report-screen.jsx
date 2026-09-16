@@ -17,22 +17,22 @@ import api from '../apiroute/apiroute';
 import Header from '../screens/header';
 
 async function fetchReportList({ search, client, checkTypeId, from, to, finalized }) {
-  const res = await api.get('/report/list', { params: { search, client, checkTypeId, from, to, finalized } });
+  const res = await api.get('/api/report/list', { params: { search, client, checkTypeId, from, to, finalized } });
   return res.data;
 }
 
 async function fetchCheckTypes() {
-  const res = await api.get('/verifications/checktypes');
+  const res = await api.get('/api/verifications/checktypes');
   return res.data;
 }
 
 async function finalizeReport(workorderId, slNo, payload) {
-  const res = await api.post(`/report/${workorderId}/checks/${slNo}/finalize`, payload);
+  const res = await api.post(`/api/report/${workorderId}/checks/${slNo}/finalize`, payload);
   return res.data;
 }
 
 async function fetchReportDetail(workorderId, slNo) {
-  const res = await api.get(`/report/${workorderId}/checks/${slNo}`);
+  const res = await api.get(`/api/report/${workorderId}/checks/${slNo}`);
   return res.data;
 }
 
@@ -40,7 +40,7 @@ async function fetchReportDetail(workorderId, slNo) {
 // Fetched as a blob (rather than a plain <a href>) so the api instance's
 // auth headers / baseURL config are reused automatically.
 async function downloadReportPdf(workorderId, slNo, fileHint) {
-  const res = await api.get(`/report/${workorderId}/checks/${slNo}/pdf`, { responseType: 'blob' });
+  const res = await api.get(`/api/report/${workorderId}/checks/${slNo}/pdf`, { responseType: 'blob' });
   const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
   const link = document.createElement('a');
   link.href = blobUrl;
