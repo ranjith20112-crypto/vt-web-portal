@@ -143,7 +143,7 @@ const Vendorcreation = () => {
     const fetchVendors = async () => {
         setLoading(true);
         try {
-            const res = await api.get('/vendors');
+            const res = await api.get('/api/vendors');
             if (res.data?.success) {
                 setVendors(res.data.vendors || []);
             } else {
@@ -361,7 +361,7 @@ const Vendorcreation = () => {
 
         try {
             if (editingVendor) {
-                const res = await api.put(`/vendors/${editingVendor._id}`, payload);
+                const res = await api.put(`/api/vendors/${editingVendor._id}`, payload);
                 if (res.data?.success) {
                     setNotification({ type: 'success', message: 'Vendor updated successfully!' });
                     await fetchVendors();
@@ -370,7 +370,7 @@ const Vendorcreation = () => {
                     setNotification({ type: 'error', message: res.data?.message || 'Update failed' });
                 }
             } else {
-                const res = await api.post('/vendor/register', payload);
+                const res = await api.post('/api/vendor/register', payload);
                 if (res.data?.success) {
                     setNotification({ type: 'success', message: 'Vendor created successfully!' });
                     await fetchVendors();
@@ -394,7 +394,7 @@ const Vendorcreation = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this vendor?')) {
             try {
-                const res = await api.delete(`/vendors/${id}`);
+                const res = await api.delete(`/api/vendors/${id}`);
                 if (res.data?.success) {
                     setNotification({ type: 'success', message: 'Vendor deleted successfully!' });
                     await fetchVendors();
