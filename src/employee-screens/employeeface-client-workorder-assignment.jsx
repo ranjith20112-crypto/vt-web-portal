@@ -420,7 +420,7 @@ const RaiseInsufficiencyModal = ({ isOpen, onClose, workorder, onRaised }) => {
         setSubmitting(true);
         setError('');
         try {
-            await api.post('/workorder-assignment/insufficiency', {
+            await api.post('/api/workorder-assignment/insufficiency', {
                 workorderId: workorder._id,
                 bgvRef: workorder.bgvRef,
                 candidateName: workorder.candidateName,
@@ -506,7 +506,7 @@ const UnassignModal = ({ isOpen, onClose, workorder, onUnassigned }) => {
         setSubmitting(true);
         setError('');
         try {
-            await api.put(`/workorder-assignment/${workorder._id}/unassign`, {});
+            await api.put(`/api/workorder-assignment/${workorder._id}/unassign`, {});
             onUnassigned?.(workorder._id);
             onClose();
         } catch (err) {
@@ -567,7 +567,7 @@ const DeleteWorkorderModal = ({ isOpen, onClose, workorder, onDeleted }) => {
         setSubmitting(true);
         setError('');
         try {
-            await api.delete(`/workorders/${workorder._id}`);
+            await api.delete(`/api/workorders/${workorder._id}`);
             onDeleted?.(workorder._id);
             onClose();
         } catch (err) {
@@ -645,10 +645,10 @@ const BulkAssignModal = ({ isOpen, onClose, selectedChecks = [], onBulkAssigned 
             setError('');
             try {
                 if (assignmentType === 'internal' && employees.length === 0) {
-                    const res = await api.get('/employees');
+                    const res = await api.get('/api/employees');
                     setEmployees(res.data?.employees || []);
                 } else if (assignmentType === 'external' && vendors.length === 0) {
-                    const res = await api.get('/vendors');
+                    const res = await api.get('/api/vendors');
                     setVendors(res.data?.vendors || []);
                 }
             } catch (err) {
@@ -678,7 +678,7 @@ const BulkAssignModal = ({ isOpen, onClose, selectedChecks = [], onBulkAssigned 
         setSubmitting(true);
         setError('');
         try {
-            await api.post('/workorder-assignment/bulk', {
+            await api.post('/api/workorder-assignment/bulk', {
                 workorderIds: selectedChecks,
                 assignmentType,
                 assignedToId: selectedExecutive,
@@ -805,7 +805,7 @@ const EmployeeAssignment = () => {
     const fetchWorkorders = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await api.get('/workorders');
+            const res = await api.get('/api/workorders');
             let orders = res.data?.workorders || [];
 
             orders = orders.map(wo => ({
