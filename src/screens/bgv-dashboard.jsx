@@ -41,7 +41,7 @@ import { getCheckTypeVisual } from '../config/verificationPalette';
 
 /* ───────── Light-theme card colours ───────── */
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backend-r6xl.onrender.com';
-const API = `${API_BASE_URL}/api`;
+const API = `/api`;
 
 const CARD_BG = '#FFFFFF';
 const CARD_BORDER = '#D6EDE6';
