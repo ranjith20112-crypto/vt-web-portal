@@ -20,22 +20,22 @@ import api from '../apiroute/apiroute';
 import Header from '../screens/header';
 
 async function fetchDeliveryList({ search, client, checkTypeId, from, to, status }) {
-  const res = await api.get('/report-delivery/list', { params: { search, client, checkTypeId, from, to, status } });
+  const res = await api.get('/api/report-delivery/list', { params: { search, client, checkTypeId, from, to, status } });
   return res.data;
 }
 
 async function fetchCheckTypes() {
-  const res = await api.get('/verifications/checktypes');
+  const res = await api.get('/api/verifications/checktypes');
   return res.data;
 }
 
 async function resendReport(workorderId, slNo, clientEmail) {
-  const res = await api.post(`/report-delivery/${workorderId}/checks/${slNo}/resend`, { clientEmail });
+  const res = await api.post(`/api/report-delivery/${workorderId}/checks/${slNo}/resend`, { clientEmail });
   return res.data;
 }
 
 async function downloadReportPdf(workorderId, slNo, fileHint) {
-  const res = await api.get(`/report/${workorderId}/checks/${slNo}/pdf`, { responseType: 'blob' });
+  const res = await api.get(`/api/report/${workorderId}/checks/${slNo}/pdf`, { responseType: 'blob' });
   const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
   const link = document.createElement('a');
   link.href = blobUrl;
