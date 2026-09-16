@@ -199,7 +199,7 @@ const CustomFields = () => {
     const fetchCustomFields = async () => {
         try {
             setLoading(true);
-            const res = await api.get('/customfields');
+            const res = await api.get('/api/customfields');
             if (res.data.success) {
                 setCustomFields(res.data.customFields.map(f => ({ ...f, id: f._id })));
             }
@@ -214,7 +214,7 @@ const CustomFields = () => {
 
     const fetchCheckTypes = async () => {
         try {
-            const res = await api.get('/checktypes');
+            const res = await api.get('/api/checktypes');
             if (res.data.success) {
                 setCheckTypes(res.data.checkTypes.map(c => ({ ...c, id: c._id })));
             }
@@ -228,7 +228,7 @@ const CustomFields = () => {
         if (!checkTypeId) { setModalSubChecks([]); return; }
         try {
             setLoadingSubChecks(true);
-            const res = await api.get(`/customfields/subchecks/${checkTypeId}`);
+            const res = await api.get(`/api/customfields/subchecks/${checkTypeId}`);
             setModalSubChecks(res.data?.success ? (res.data.subChecks || []) : []);
         } catch (error) {
             console.error('Load modal sub-checks error:', error);
@@ -242,7 +242,7 @@ const CustomFields = () => {
     const loadFilterSubChecks = async (checkTypeId) => {
         if (!checkTypeId || checkTypeId === 'all') { setFilterSubChecks([]); return; }
         try {
-            const res = await api.get(`/customfields/subchecks/${checkTypeId}`);
+            const res = await api.get(`/api/customfields/subchecks/${checkTypeId}`);
             setFilterSubChecks(res.data?.success ? (res.data.subChecks || []) : []);
         } catch (error) {
             console.error('Load filter sub-checks error:', error);
@@ -445,13 +445,13 @@ const CustomFields = () => {
 
         try {
             if (editingField) {
-                const res = await api.put(`/customfields/${editingField.id}`, payload);
+                const res = await api.put(`/api/customfields/${editingField.id}`, payload);
                 if (res.data.success) {
                     await fetchCustomFields();
                     setNotification({ type: 'success', message: 'Custom field updated successfully!' });
                 }
             } else {
-                const res = await api.post('/customfields/create', payload);
+                const res = await api.post('/api/customfields/create', payload);
                 if (res.data.success) {
                     await fetchCustomFields();
                     setNotification({ type: 'success', message: 'Custom field created successfully!' });
@@ -471,7 +471,7 @@ const CustomFields = () => {
     const handleDeleteClick = async (id) => {
         if (!window.confirm('Delete this custom field? This action cannot be undone.')) return;
         try {
-            const res = await api.delete(`/customfields/${id}`);
+            const res = await api.delete(`/api/customfields/${id}`);
             if (res.data.success) {
                 await fetchCustomFields();
                 setNotification({ type: 'success', message: 'Custom field deleted!' });
