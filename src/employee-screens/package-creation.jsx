@@ -74,7 +74,7 @@ const Packages = () => {
     const fetchPackages = async () => {
         try {
             setLoading(true);
-            const res = await api.get('/packages');
+            const res = await api.get('/api/packages');
             if (res.data.success) {
                 setPackages(res.data.packages.map(p => ({
                     ...p,
@@ -95,7 +95,7 @@ const Packages = () => {
     // ─── Fetch check types (active only) ─────────────────────────────
     const fetchCheckTypes = async () => {
         try {
-            const res = await api.get('/checktypes');
+            const res = await api.get('/api/checktypes');
             if (res.data.success) {
                 setCheckTypeList(res.data.checkTypes
                     .map(c => ({ ...c, id: c._id }))
@@ -109,7 +109,7 @@ const Packages = () => {
     // ─── Fetch sub-checks ────────────────────────────────────────────
     const fetchSubChecks = async () => {
         try {
-            const res = await api.get('/subchecktypes');
+            const res = await api.get('/api/subchecktypes');
             if (res.data.success) {
                 setSubChecksData(res.data.subChecks.map(s => ({ ...s, id: s._id })));
             }
@@ -215,7 +215,7 @@ const Packages = () => {
 
         try {
             if (editingPackage) {
-                const res = await api.put(`/packages/${editingPackage.id}`, {
+                const res = await api.put(`/api/packages/${editingPackage.id}`, {
                     name: formData.name,
                     description: formData.description,
                     active: formData.active,
@@ -227,7 +227,7 @@ const Packages = () => {
                     setNotification({ type: 'success', message: 'Package updated successfully!' });
                 }
             } else {
-                const res = await api.post('/package/create', {
+                const res = await api.post('/api/package/create', {
                     code: formData.code,
                     name: formData.name,
                     description: formData.description,
@@ -254,7 +254,7 @@ const Packages = () => {
     const handleDeleteClick = async (id) => {
         if (!window.confirm('Delete this package?')) return;
         try {
-            const res = await api.delete(`/packages/${id}`);
+            const res = await api.delete(`/api/packages/${id}`);
             if (res.data.success) {
                 await fetchPackages();
                 setNotification({ type: 'success', message: 'Deleted successfully!' });
