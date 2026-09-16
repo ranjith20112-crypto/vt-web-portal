@@ -16,11 +16,7 @@ import {
   IoCheckmarkCircle,
   IoCubeOutline,
   IoSendOutline,
-  IoFlagOutline,Hi @Bharathiselvan,
-
-We have a few questions regarding the Zoho Recruitment Dashboard. Could you please provide a brief walkthrough of the process to our team today at 4:30 PM via Google Meet?
-
-Kindly confirm your availability.
+  IoFlagOutline,
   IoCardOutline,
   IoPeopleOutline,
   IoPersonAddOutline,
