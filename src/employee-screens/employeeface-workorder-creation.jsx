@@ -299,9 +299,9 @@ const EmployeeWorkorderCreation = () => {
       setLoadingChecks(true);
       try {
         const [clientsRes, packagesRes, checksRes] = await Promise.all([
-          api.get('/clients'),
-          api.get('/packages'),
-          api.get('/checktypes'),
+          api.get('/api/clients'),
+          api.get('/api/packages'),
+          api.get('/api/checktypes'),
         ]);
         setClients(clientsRes.data.success ? clientsRes.data.clients : []);
         // FIX: normalize packages the same way Packages.jsx does (id + checkComponents)
@@ -383,7 +383,7 @@ const EmployeeWorkorderCreation = () => {
 
     try {
       const params = subCheckId ? { subCheckId } : {};
-      const res = await api.get(`/customfields/by-checktype/${checkTypeId}`, { params });
+      const res = await api.get(`/api/customfields/by-checktype/${checkTypeId}`, { params });
       const fields = res.data?.success
         ? (res.data.fields || []).map(normalizeCustomField)
         : [];
@@ -595,7 +595,7 @@ const EmployeeWorkorderCreation = () => {
         status: 'draft',
       };
 
-      const res = await api.post('/workorders?as=employee', payload);
+      const res = await api.post('/api/workorders?as=employee', payload);
       if (res.data.success) {
         setSavedWorkorder(res.data.workorder);
         setPhase('candidate');
@@ -620,7 +620,7 @@ const EmployeeWorkorderCreation = () => {
         const notStarted = !currentStatus || currentStatus === 'pending' || currentStatus === 'draft';
         if (!notStarted) return;
         try {
-          const res = await api.put(`/workorders/${workorder._id}/checks/${c.slNo}`, {
+          const res = await api.put(`/api/workorders/${workorder._id}/checks/${c.slNo}`, {
             data: c.data || {},
             status: 'assignment-pending',
             notes: c.notes || '',
@@ -647,7 +647,7 @@ const EmployeeWorkorderCreation = () => {
         if (file) fd.append(key, file);
       });
 
-      const res = await api.put(`/workorders/${savedWorkorder._id}/candidate`, fd, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/candidate`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (res.data.success) {
@@ -676,7 +676,7 @@ const EmployeeWorkorderCreation = () => {
     const slKey = String(slNo);
     setSavingCheckSlNo(slKey);
     try {
-      const res = await api.put(`/workorders/${savedWorkorder._id}/checks/${slNo}`, {
+      const res = await api.put(`/api/workorders/${savedWorkorder._id}/checks/${slNo}`, {
         data: checkData[slKey] || {},
         status: checkMeta[slKey]?.status || 'assignment-pending',
         notes: checkMeta[slKey]?.notes || '',
@@ -722,13 +722,13 @@ const EmployeeWorkorderCreation = () => {
           checks: buildChecksPayload(),
           status: 'draft',
         };
-        const draftRes = await api.post('/workorders?as=employee', payload);
+        const draftRes = await api.post('/api/workorders?as=employee', payload);
         if (!draftRes.data.success) throw new Error('Draft creation failed');
         workorderId = draftRes.data.workorder._id;
         setSavedWorkorder(draftRes.data.workorder);
       }
 
-      const res = await api.put(`/workorders/${workorderId}`, {
+      const res = await api.put(`/api/workorders/${workorderId}`, {
         status: 'submitted',
         initiationMode,
       });
@@ -773,19 +773,19 @@ const EmployeeWorkorderCreation = () => {
           checks: buildChecksPayload(),
           status: 'draft',
         };
-        const draftRes = await api.post('/workorders?as=employee', payload);
+        const draftRes = await api.post('/api/workorders?as=employee', payload);
         if (!draftRes.data.success) throw new Error('Draft creation failed');
         workorderId = draftRes.data.workorder._id;
         setSavedWorkorder(draftRes.data.workorder);
       }
 
-      const submitRes = await api.put(`/workorders/${workorderId}`, {
+      const submitRes = await api.put(`/api/workorders/${workorderId}`, {
         status: 'submitted',
         initiationMode,
       });
       if (!submitRes.data.success) throw new Error('Submit failed');
 
-      const inviteRes = await api.post(`/workorders/${workorderId}/send-invite`, {
+      const inviteRes = await api.post(`/api/workorders/${workorderId}/send-invite`, {
         email: savedWorkorder?.email || form.email,
         phone: savedWorkorder?.phone || form.phone,
         fullName: savedWorkorder?.fullName || form.fullName,
