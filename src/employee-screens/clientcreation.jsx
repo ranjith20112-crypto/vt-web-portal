@@ -248,7 +248,7 @@ const ClientManagement = () => {
   const fetchClients = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/clients');
+      const response = await api.get('/api/clients');
       if (response.data.success) {
         setClients(response.data.clients || []);
       }
@@ -264,7 +264,7 @@ const ClientManagement = () => {
   const fetchEmployees = async () => {
     setEmployeesLoading(true);
     try {
-      const response = await api.get('/employees');
+      const response = await api.get('/api/employees');
       if (response.data.success) {
         setEmployees(response.data.employees || []);
       }
@@ -279,7 +279,7 @@ const ClientManagement = () => {
   const fetchPackages = async () => {
     setPackagesLoading(true);
     try {
-      const response = await api.get('/packages');
+      const response = await api.get('/api/packages');
       if (response.data.success) {
         setPackages(response.data.packages || []);
       }
