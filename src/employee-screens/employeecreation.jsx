@@ -141,7 +141,7 @@ const EmployeeManagement = () => {
   const fetchEmployees = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/employees');
+      const response = await api.get('/api/employees');
       if (response.data.success) {
         setUsers(response.data.employees || []);
       }
@@ -173,9 +173,9 @@ const EmployeeManagement = () => {
     try {
       if (editingUserId) {
         console.log("Updating employee with ID:", editingUserId); // ← Debug
-        await api.put(`/employees/${editingUserId}`, formData);
+        await api.put(`/api/employees/${editingUserId}`, formData);
       } else {
-        await api.post('/employee/register', formData);
+        await api.post('/api/employee/register', formData);
       }
 
       alert(editingUserId ? "Employee updated successfully!" : "Employee created successfully!");
@@ -224,7 +224,7 @@ const EmployeeManagement = () => {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/employees/${deletingUserId}`);
+      await api.delete(`/api/employees/${deletingUserId}`);
       alert("Employee deleted successfully");
       await fetchEmployees();
     } catch (error) {
