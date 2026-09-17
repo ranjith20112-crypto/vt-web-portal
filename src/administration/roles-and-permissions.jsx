@@ -79,22 +79,22 @@ const UserAccessManagement = () => {
 
     // ─── Fetch data ─────────────────────────────────────────────────────
     const fetchModules = async () => {
-        try { const res = await api.get('/modules'); if (res.data.success) setModules(res.data.modules); }
+        try { const res = await api.get('/api/modules'); if (res.data.success) setModules(res.data.modules); }
         catch (error) { console.error('Fetch modules error:', error); }
     };
 
     const fetchRoles = async () => {
-        try { const res = await api.get('/useraccess/roles'); if (res.data.success) setRoles(res.data.roles); }
+        try { const res = await api.get('/api/useraccess/roles'); if (res.data.success) setRoles(res.data.roles); }
         catch (error) { console.error('Fetch roles error:', error); }
     };
 
     const fetchEmployees = async () => {
-        try { const res = await api.get('/useraccess/employees'); if (res.data.success) setEmployees(res.data.employees); }
+        try { const res = await api.get('/api/useraccess/employees'); if (res.data.success) setEmployees(res.data.employees); }
         catch (error) { console.error('Fetch employees error:', error); }
     };
 
     const fetchVendors = async () => {
-        try { const res = await api.get('/useraccess/vendors'); if (res.data.success) setVendors(res.data.vendors); }
+        try { const res = await api.get('api/useraccess/vendors'); if (res.data.success) setVendors(res.data.vendors); }
         catch (error) { console.error('Fetch vendors error:', error); }
     };
 
@@ -109,7 +109,7 @@ const UserAccessManagement = () => {
     const handleSyncModules = async () => {
         setIsSyncingModules(true);
         try {
-            const res = await api.post('/modules/sync', appRoutesPayload);
+            const res = await api.post('/api/modules/sync', appRoutesPayload);
             if (res.data.success) {
                 await fetchModules();
                 setNotification({ type: 'success', message: `Synced ${res.data.syncedCount} module(s) from appRoutes.js` });
@@ -287,10 +287,10 @@ const UserAccessManagement = () => {
         try {
             const payload = { roleName: roleForm.roleName, description: roleForm.description, permissions: rolePermMatrix };
             if (editingRole) {
-                const res = await api.put(`/useraccess/roles/${editingRole._id}`, payload);
+                const res = await api.put(`/api/useraccess/roles/${editingRole._id}`, payload);
                 if (res.data.success) { await fetchRoles(); setNotification({ type: 'success', message: 'Role updated!' }); }
             } else {
-                const res = await api.post('/useraccess/roles', payload);
+                const res = await api.post('/api/useraccess/roles', payload);
                 if (res.data.success) { await fetchRoles(); setNotification({ type: 'success', message: 'Role created!' }); }
             }
             closeRoleModal();
@@ -306,7 +306,7 @@ const UserAccessManagement = () => {
     const handleDeleteRole = async (role) => {
         if (!window.confirm(`Delete role "${role.roleName}"?`)) return;
         try {
-            const res = await api.delete(`/useraccess/roles/${role._id}`);
+            const res = await api.delete(`/api/useraccess/roles/${role._id}`);
             if (res.data.success) { await fetchRoles(); setNotification({ type: 'success', message: 'Role deleted!' }); }
         } catch (error) {
             console.error('Delete role error:', error);
