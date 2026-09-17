@@ -498,7 +498,7 @@ const ClientManagement = () => {
 
   const confirmDelete = async () => {
     try {
-      await api.delete(`/clients/${deletingClientId}`);
+      await api.delete(`/api/clients/${deletingClientId}`);
       alert('Client deleted successfully');
       await fetchClients();
     } catch (error) {
