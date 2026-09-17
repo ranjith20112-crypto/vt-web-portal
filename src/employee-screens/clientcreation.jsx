@@ -432,6 +432,41 @@ const ClientManagement = () => {
     return fd;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation for portal access
+    if (formData.enablePortalLogin) {
+      if (!formData.portalEmail || (!editingClientId && !formData.portalPassword)) {
+        alert('Portal Email and Password are required when portal login is enabled.');
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const payload = buildPayload();
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+      if (editingClientId) {
+        await api.put(`/api/clients/${editingClientId}`, payload, config);
+      } else {
+        await api.post('/api/client/register', payload, config);
+      }
+
+      alert(editingClientId ? 'Client updated successfully!' : 'Client created successfully!');
+      await fetchClients();
+      setIsModalOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error('Submit Error:', error);
+      alert(error.response?.data?.message || 'Operation failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleEdit = (client) => {
     const c = { ...client };
 
