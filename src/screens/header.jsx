@@ -1,10 +1,16 @@
 /* ============================================================
-   Header.jsx — Verifitech Shared Header (Redesigned)
-   - Logo removed (text wordmark instead)
-   - New UI theme: modern dark slate + indigo accent
-   - All backend logic preserved:
+   Header.jsx — Verifitech Shared Header (Redesigned — Verifitrust)
+   - Real Verifitrust logo embedded (../assets/verifitrust-logo.png)
+   - Theme colors pulled from the logo:
+       "Verifi" deep blue  → primary brand
+       "trust" emerald green → secondary accent
+       blue shield icon     → iconography
+   - All backend logic preserved end-to-end:
        useAuth, useNavigate, useLocation, logout, vendor detection,
-       ProfileOverlay, live datetime, tab routing on /mainlayout
+       ProfileOverlay, live datetime, tab routing on /mainlayout.
+
+   >>> SETUP: place verifitrust-logo.png in src/assets/ (or update
+       the import path below to wherever you keep it). <<<
    ============================================================ */
 import React, { useState, useEffect } from 'react';
 import {
@@ -21,22 +27,43 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileOverlay from '../screens/profileoverlay';
 
-// ── New theme: "Midnight Indigo" ──────────────────────────────
-// Deep slate header with glass blur, indigo accent, soft white text.
+// ── Verifitrust logo (update this path if your assets live elsewhere) ──
+import verifitrustLogo from '../assets/verifitrust-logo.png';
+
+// ── "Verifitrust Blue + Green" theme ───────────────────────────
+// Pulled directly from the logo: deep blue for "Verifi", emerald
+// green for "trust", blue shield as the security iconography.
 const THEME = {
-  base: '#0B1120',              // deep slate background
-  baseAlt: '#111827',           // slightly lighter slate
-  surface: 'rgba(255,255,255,0.06)', // glass surface for inputs/chips
-  surfaceHover: 'rgba(255,255,255,0.10)',
-  border: 'rgba(255,255,255,0.08)',
-  borderStrong: 'rgba(99,102,241,0.35)',
-  accent: '#6366F1',            // indigo-500
-  accentSoft: 'rgba(99,102,241,0.15)',
-  accentGlow: 'rgba(99,102,241,0.45)',
-  text: '#F8FAFC',              // near-white
-  textMuted: '#94A3B8',         // slate-400
-  danger: '#F87171',
-  dangerSoft: 'rgba(248,113,113,0.12)',
+  // Surfaces — clean white with a faint blue tint
+  base: '#FFFFFF',
+  baseAlt: '#F6F9FC',                    // very faint cool tint
+  surface: '#F1F5FB',                    // soft blue-tinted chip
+  surfaceStrong: '#E6EEF8',
+  surfaceHover: '#DCE7F3',
+  border: '#E2EAF4',                     // faint blue hairline
+  borderStrong: 'rgba(30,64,175,0.30)',  // blue border for focus/active
+
+  // Brand — Deep Blue (from "Verifi" in the logo)
+  brand: '#1D4ED8',                      // blue-700
+  brandDark: '#1E3A8A',                  // blue-900
+  brandDeep: '#172554',                  // blue-950 (deep)
+  brandSoft: 'rgba(29,78,216,0.10)',     // soft blue fill
+  brandGlow: 'rgba(29,78,216,0.30)',     // blue glow
+
+  // Secondary — Emerald Green (from "trust" in the logo)
+  accent: '#10B981',                     // emerald-500
+  accentDark: '#059669',                 // emerald-600
+  accentSoft: 'rgba(16,185,129,0.12)',
+  accentGlow: 'rgba(16,185,129,0.30)',
+
+  // Text
+  text: '#0F172A',                       // near-black
+  textMuted: '#64748B',                  // slate-500
+  textSubtle: '#94A3B8',                 // slate-400
+
+  // Status
+  danger: '#DC2626',
+  dangerSoft: 'rgba(220,38,38,0.08)',
 };
 
 const tabs = [
@@ -116,36 +143,33 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
         style={{
           background: `linear-gradient(180deg, ${THEME.base} 0%, ${THEME.baseAlt} 100%)`,
           borderColor: THEME.border,
-          boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
+          boxShadow: '0 2px 16px rgba(29,78,216,0.06)',
         }}
       >
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Top Bar - Always Visible */}
           <div className="flex items-center justify-between h-20">
-            {/* ── Brand wordmark (logo removed) ── */}
+            {/* ── Brand: Verifitrust logo + tagline ── */}
             <div className="flex items-center gap-3">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{
-                  background: THEME.accentSoft,
-                  border: `1px solid ${THEME.borderStrong}`,
-                  boxShadow: `0 0 20px ${THEME.accentGlow}`,
-                }}
-              >
-                <FiShield size={20} style={{ color: THEME.accent }} />
-              </div>
-              <div className="hidden sm:flex flex-col leading-none">
+              <img
+                src={verifitrustLogo}
+                alt="Verifitrust — Right People · Safer Future"
+                className="h-10 sm:h-11 w-auto object-contain"
+                style={{ maxHeight: 44 }}
+              />
+              <div className="hidden lg:flex flex-col leading-none pl-3 border-l"
+                   style={{ borderColor: THEME.border }}>
                 <span
-                  className="text-lg font-bold tracking-tight"
-                  style={{ color: THEME.text, letterSpacing: '-0.02em' }}
+                  className="text-[10px] font-bold uppercase tracking-[0.22em]"
+                  style={{ color: THEME.brandDark }}
                 >
-                  Verifi<span style={{ color: THEME.accent }}>tech</span>
+                  Right People
                 </span>
                 <span
-                  className="text-[10px] font-medium uppercase tracking-[0.18em]"
-                  style={{ color: THEME.textMuted }}
+                  className="text-[10px] font-bold uppercase tracking-[0.22em] mt-0.5"
+                  style={{ color: THEME.accentDark }}
                 >
-                  Background Verification
+                  Safer Future
                 </span>
               </div>
             </div>
@@ -153,23 +177,23 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
             {/* Search */}
             <div className="hidden md:flex items-center flex-1 max-w-md mx-6 lg:mx-8">
               <div
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all focus-within:border-indigo-400"
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100"
                 style={{
                   background: THEME.surface,
                   borderColor: THEME.border,
                 }}
               >
-                <FiSearch size={18} style={{ color: THEME.textMuted }} />
+                <FiSearch size={18} style={{ color: THEME.brand }} />
                 <input
                   type="text"
                   placeholder="Search candidates, clients, or reports..."
-                  className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500"
+                  className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                   style={{ color: THEME.text }}
                 />
                 <kbd
                   className="hidden lg:inline px-1.5 py-0.5 text-[10px] rounded font-mono"
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
+                    background: '#FFFFFF',
                     color: THEME.textMuted,
                     border: `1px solid ${THEME.border}`,
                   }}
@@ -191,7 +215,7 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
                 }}
               >
                 <span
-                  className="w-1.5 h-1.5 rounded-full"
+                  className="w-1.5 h-1.5 rounded-full animate-pulse"
                   style={{
                     background: THEME.accent,
                     boxShadow: `0 0 8px ${THEME.accentGlow}`,
@@ -211,7 +235,7 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
                   className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
                   style={{
                     background: THEME.accent,
-                    boxShadow: `0 0 0 2px ${THEME.baseAlt}`,
+                    boxShadow: `0 0 0 2px ${THEME.base}`,
                   }}
                 />
               </button>
@@ -241,9 +265,9 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
                     style={{
-                      background: `linear-gradient(135deg, ${THEME.accent} 0%, #8B5CF6 100%)`,
+                      background: `linear-gradient(135deg, ${THEME.brand} 0%, ${THEME.brandDark} 100%)`,
                       color: '#FFFFFF',
-                      boxShadow: `0 2px 8px ${THEME.accentGlow}`,
+                      boxShadow: `0 2px 8px ${THEME.brandGlow}`,
                     }}
                   >
                     {initials || 'VT'}
@@ -310,20 +334,20 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
                       onClick={() => onTabChange(tab.id)}
                       className="flex items-center gap-2 px-5 sm:px-7 py-3.5 text-sm font-medium whitespace-nowrap transition-all duration-200 relative"
                       style={{
-                        color: isActive ? THEME.text : THEME.textMuted,
+                        color: isActive ? THEME.brandDark : THEME.textMuted,
                       }}
                     >
                       <Icon
                         size={16}
-                        style={{ color: isActive ? THEME.accent : THEME.textMuted }}
+                        style={{ color: isActive ? THEME.brand : THEME.textMuted }}
                       />
                       {tab.label}
                       {isActive && (
                         <span
                           className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full"
                           style={{
-                            background: THEME.accent,
-                            boxShadow: `0 0 12px ${THEME.accentGlow}`,
+                            background: `linear-gradient(90deg, ${THEME.brand} 0%, ${THEME.accent} 100%)`,
+                            boxShadow: `0 0 12px ${THEME.brandGlow}`,
                           }}
                         />
                       )}
