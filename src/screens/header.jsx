@@ -12,7 +12,7 @@ import {
   FiChevronDown,
   FiLogOut
 } from 'react-icons/fi';
-import verifiTechLogo from '../assets/verifitech-logoo.png';
+import verifiTechLogo from '';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileOverlay from '../screens/profileoverlay';
