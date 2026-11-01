@@ -1,6 +1,6 @@
 /* ============================================================
    Header.jsx — Verifitech Shared Header (Redesigned — Verifitrust)
-   - Real Verifitrust logo embedded (../assets/verifitrust-logo.png)
+   - Logo loaded directly from https://verifitrust.com/assets/logo.png
    - Theme colors pulled from the logo:
        "Verifi" deep blue  → primary brand
        "trust" emerald green → secondary accent
@@ -8,9 +8,6 @@
    - All backend logic preserved end-to-end:
        useAuth, useNavigate, useLocation, logout, vendor detection,
        ProfileOverlay, live datetime, tab routing on /mainlayout.
-
-   >>> SETUP: place verifitrust-logo.png in src/assets/ (or update
-       the import path below to wherever you keep it). <<<
    ============================================================ */
 import React, { useState, useEffect } from 'react';
 import {
@@ -27,8 +24,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileOverlay from '../screens/profileoverlay';
 
-// ── Verifitrust logo (update this path if your assets live elsewhere) ──
-import verifitrustLogo from '../assets/verifitrust-logo.png';
+// ── Verifitrust logo (loaded from the live site) ──
+const VERIFITRUST_LOGO_URL = 'https://verifitrust.com/assets/logo.png';
 
 // ── "Verifitrust Blue + Green" theme ───────────────────────────
 // Pulled directly from the logo: deep blue for "Verifi", emerald
@@ -152,10 +149,15 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
             {/* ── Brand: Verifitrust logo + tagline ── */}
             <div className="flex items-center gap-3">
               <img
-                src={verifitrustLogo}
+                src={VERIFITRUST_LOGO_URL}
                 alt="Verifitrust — Right People · Safer Future"
                 className="h-10 sm:h-11 w-auto object-contain"
                 style={{ maxHeight: 44 }}
+                onError={(e) => {
+                  // Graceful fallback: if the remote logo fails to load,
+                  // hide the broken img so the layout doesn't break.
+                  e.currentTarget.style.display = 'none';
+                }}
               />
               <div className="hidden lg:flex flex-col leading-none pl-3 border-l"
                    style={{ borderColor: THEME.border }}>
