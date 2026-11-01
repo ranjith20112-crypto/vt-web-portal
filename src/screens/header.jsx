@@ -1,13 +1,7 @@
 /* ============================================================
-   Header.jsx — Verifitech Shared Header (Redesigned — Verifitrust)
-   - Logo loaded directly from https://verifitrust.com/assets/logo.png
-   - Theme colors pulled from the logo:
-       "Verifi" deep blue  → primary brand
-       "trust" emerald green → secondary accent
-       blue shield icon     → iconography
-   - All backend logic preserved end-to-end:
-       useAuth, useNavigate, useLocation, logout, vendor detection,
-       ProfileOverlay, live datetime, tab routing on /mainlayout.
+   Header.jsx — Verifitech Shared Header (Mobile Optimized)
+   Updated with AuthContext + Real User Data + Logout + Profile Overlay
+   Recolored to match teal/turquoise brand palette
    ============================================================ */
 import React, { useState, useEffect } from 'react';
 import {
@@ -16,60 +10,36 @@ import {
   FiBell,
   FiSettings,
   FiChevronDown,
-  FiLogOut,
-  FiGrid,
-  FiSliders,
+  FiLogOut
 } from 'react-icons/fi';
+import verifiTechLogo from '../assets/verifitech-logoo.png';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileOverlay from '../screens/profileoverlay';
+// theme import kept for anything else that still relies on it,
+// but this header now uses its own local teal palette (see TEAL below)
+import theme from '../theme/theme';
 
-// ── Verifitrust logo (loaded from the live site) ──
-const VERIFITRUST_LOGO_URL = 'https://verifitrust.com/assets/logo.png';
+// ── Teal brand palette, matched to the marketing/landing page ──
+// Light mint/teal gradient (same family as the hero background),
+// so the header now sits on light shades instead of a solid dark teal.
+const TEAL = {
+  brand: '#14B8A6',        // bright teal accent (buttons, avatars, active-tab underline)
+  headerGradient: 'linear-gradient(135deg, #F0FDFA 0%, #E6FFFA 35%, #CCFBF1 70%, #99F6E4 100%)',
+  headerBgDark: 'rgba(255,255,255,0.55)', // soft white glass for search/pill backgrounds
+  headerBorder: 'rgba(13,148,136,0.15)',  // faint teal hairline borders
 
-// ── "Verifitrust Blue + Green" theme ───────────────────────────
-// Pulled directly from the logo: deep blue for "Verifi", emerald
-// green for "trust", blue shield as the security iconography.
-const THEME = {
-  // Surfaces — clean white with a faint blue tint
-  base: '#FFFFFF',
-  baseAlt: '#F6F9FC',                    // very faint cool tint
-  surface: '#F1F5FB',                    // soft blue-tinted chip
-  surfaceStrong: '#E6EEF8',
-  surfaceHover: '#DCE7F3',
-  border: '#E2EAF4',                     // faint blue hairline
-  borderStrong: 'rgba(30,64,175,0.30)',  // blue border for focus/active
-
-  // Brand — Deep Blue (from "Verifi" in the logo)
-  brand: '#1D4ED8',                      // blue-700
-  brandDark: '#1E3A8A',                  // blue-900
-  brandDeep: '#172554',                  // blue-950 (deep)
-  brandSoft: 'rgba(29,78,216,0.10)',     // soft blue fill
-  brandGlow: 'rgba(29,78,216,0.30)',     // blue glow
-
-  // Secondary — Emerald Green (from "trust" in the logo)
-  accent: '#10B981',                     // emerald-500
-  accentDark: '#059669',                 // emerald-600
-  accentSoft: 'rgba(16,185,129,0.12)',
-  accentGlow: 'rgba(16,185,129,0.30)',
-
-  // Text
-  text: '#0F172A',                       // near-black
-  textMuted: '#64748B',                  // slate-500
-  textSubtle: '#94A3B8',                 // slate-400
-
-  // Status
-  danger: '#DC2626',
-  dangerSoft: 'rgba(220,38,38,0.08)',
+  // ── Text color: Pure Black ──
+  textColor: '#000000', // used for ALL text and icons in this header
 };
 
 const tabs = [
-  { id: 'Dashboard', label: 'Dashboard', icon: FiGrid },
-  { id: 'Administration', label: 'Administration', icon: FiSliders },
+  { id: 'Dashboard', label: 'Dashboard', icon: FiShield },
+  { id: 'Administration', label: 'Administration', icon: FiSettings },
   { id: 'BGVPlatform', label: 'BGV Platform', icon: FiShield },
 ];
 
-// Live DateTime Hook (unchanged logic)
+// Live DateTime Hook
 function useLiveDateTime() {
   const [dateTime, setDateTime] = useState(new Date());
 
@@ -108,7 +78,7 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
     user?.accountType === 'Vendor' ||
     user?.userType === 'Vendor';
 
-  // User Info (unchanged logic)
+  // User Info
   const displayName = isVendor
     ? (user?.company || user?.fullName || user?.contact || 'Vendor')
     : (user?.fullName || user?.name || user?.displayName || 'Admin User');
@@ -138,70 +108,40 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
       <header
         className="sticky top-0 z-50 backdrop-blur-xl border-b"
         style={{
-          background: `linear-gradient(180deg, ${THEME.base} 0%, ${THEME.baseAlt} 100%)`,
-          borderColor: THEME.border,
-          boxShadow: '0 2px 16px rgba(29,78,216,0.06)',
+          background: TEAL.headerGradient,
+          borderColor: TEAL.headerBorder,
+          boxShadow: '0 1px 12px rgba(13,148,136,0.08)'
         }}
       >
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Top Bar - Always Visible */}
-          <div className="flex items-center justify-between h-20">
-            {/* ── Brand: Verifitrust logo + tagline ── */}
+          <div className="flex items-center justify-between h-24">
+            {/* Logo */}
             <div className="flex items-center gap-3">
               <img
-                src={VERIFITRUST_LOGO_URL}
-                alt="Verifitrust — Right People · Safer Future"
-                className="h-10 sm:h-11 w-auto object-contain"
-                style={{ maxHeight: 44 }}
-                onError={(e) => {
-                  // Graceful fallback: if the remote logo fails to load,
-                  // hide the broken img so the layout doesn't break.
-                  e.currentTarget.style.display = 'none';
-                }}
+                src={verifiTechLogo}
+                alt="VerifiTech"
+                className="min-h-[168px] min-w-[216px] h-40 w-56 object-contain"
+                style={{ padding: '4px 0' }}
               />
-              <div className="hidden lg:flex flex-col leading-none pl-3 border-l"
-                   style={{ borderColor: THEME.border }}>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-[0.22em]"
-                  style={{ color: THEME.brandDark }}
-                >
-                  Right People
-                </span>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-[0.22em] mt-0.5"
-                  style={{ color: THEME.accentDark }}
-                >
-                  Safer Future
-                </span>
-              </div>
             </div>
 
             {/* Search */}
             <div className="hidden md:flex items-center flex-1 max-w-md mx-6 lg:mx-8">
               <div
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100"
+                className="w-full flex items-center gap-3 px-5 py-2.5 rounded-2xl border"
                 style={{
-                  background: THEME.surface,
-                  borderColor: THEME.border,
+                  background: TEAL.headerBgDark,
+                  borderColor: TEAL.headerBorder
                 }}
               >
-                <FiSearch size={18} style={{ color: THEME.brand }} />
+                <FiSearch size={18} style={{ color: TEAL.textColor }} />
                 <input
                   type="text"
                   placeholder="Search candidates, clients, or reports..."
-                  className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-                  style={{ color: THEME.text }}
+                  className="w-full bg-transparent text-sm outline-none"
+                  style={{ color: TEAL.textColor }}
                 />
-                <kbd
-                  className="hidden lg:inline px-1.5 py-0.5 text-[10px] rounded font-mono"
-                  style={{
-                    background: '#FFFFFF',
-                    color: THEME.textMuted,
-                    border: `1px solid ${THEME.border}`,
-                  }}
-                >
-                  ⌘K
-                </kbd>
               </div>
             </div>
 
@@ -209,112 +149,87 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Live DateTime */}
               <div
-                className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium font-mono whitespace-nowrap border"
+                className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-medium font-mono whitespace-nowrap border"
                 style={{
-                  background: THEME.surface,
-                  borderColor: THEME.border,
-                  color: THEME.textMuted,
+                  background: TEAL.headerBgDark,
+                  borderColor: TEAL.headerBorder,
+                  color: TEAL.textColor,
                 }}
               >
-                <span
-                  className="w-1.5 h-1.5 rounded-full animate-pulse"
-                  style={{
-                    background: THEME.accent,
-                    boxShadow: `0 0 8px ${THEME.accentGlow}`,
-                  }}
-                />
                 {liveDateTime}
               </div>
 
-              {/* Notifications */}
-              <button
-                className="p-2.5 rounded-xl relative transition-all hover:scale-105"
-                style={{ background: THEME.surface, border: `1px solid ${THEME.border}` }}
-                title="Notifications"
-              >
-                <FiBell size={18} style={{ color: THEME.text }} />
-                <span
-                  className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
+              <button className="p-2.5 rounded-2xl hover:bg-black/5 relative transition-colors">
+                <FiBell size={20} style={{ color: TEAL.textColor }} />
+                <div
+                  className="absolute top-1 right-1 w-2 h-2 rounded-full ring-2 ring-offset-2"
                   style={{
-                    background: THEME.accent,
-                    boxShadow: `0 0 0 2px ${THEME.base}`,
+                    background: TEAL.brand,
+                    boxShadow: '0 0 0 2px #F0FDFA',
                   }}
                 />
               </button>
 
-              {/* Settings */}
-              <button
-                className="p-2.5 rounded-xl transition-all hover:scale-105"
-                style={{ background: THEME.surface, border: `1px solid ${THEME.border}` }}
-                title="Settings"
-              >
-                <FiSettings size={18} style={{ color: THEME.text }} />
+              <button className="p-2.5 rounded-2xl hover:bg-black/5 transition-colors">
+                <FiSettings size={20} style={{ color: TEAL.textColor }} />
               </button>
 
-              {/* User Profile chip */}
-              <div
-                className="flex items-center gap-2 pl-2 sm:pl-3 pr-1 sm:pr-2 py-1.5 rounded-xl border"
-                style={{
-                  background: THEME.surface,
-                  borderColor: THEME.border,
-                }}
-              >
+              {/* User Profile */}
+              <div className="flex items-center gap-2 pl-3 border-l"
+                   style={{ borderColor: TEAL.headerBorder }}>
+                <div
+                  className="w-8 h-8 rounded-2xl flex items-center justify-center text-sm font-bold"
+                  style={{ background: TEAL.brand, color: '#FFFFFF' }}
+                >
+                  {initials || "VT"}
+                </div>
+
+                <div className="hidden sm:block text-right">
+                  <p
+                    className="text-sm font-medium leading-none"
+                    style={{ color: TEAL.textColor }}
+                  >
+                    {displayName}
+                  </p>
+                  {isVendor ? (
+                    <p className="text-[10px] leading-tight" style={{ color: TEAL.textColor }}>
+                      Vendor{displayEmail ? ` • ${displayEmail}` : ''}
+                    </p>
+                  ) : (
+                    <p className="text-[10px]" style={{ color: TEAL.textColor }}>{displayRole}</p>
+                  )}
+                </div>
+
+                {/* Chevron for Desktop */}
                 <button
                   onClick={() => setShowProfile(true)}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="hidden sm:block p-1 rounded-lg hover:bg-black/5 transition-colors cursor-pointer"
+                  title="View profile"
+                >
+                  <FiChevronDown size={16} style={{ color: TEAL.textColor }} />
+                </button>
+
+                {/* Mobile Avatar */}
+                <button
+                  onClick={() => setShowProfile(true)}
+                  className="sm:hidden p-0 rounded-2xl cursor-pointer"
                   title="View profile"
                 >
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-                    style={{
-                      background: `linear-gradient(135deg, ${THEME.brand} 0%, ${THEME.brandDark} 100%)`,
-                      color: '#FFFFFF',
-                      boxShadow: `0 2px 8px ${THEME.brandGlow}`,
-                    }}
+                    className="w-8 h-8 rounded-2xl flex items-center justify-center text-sm font-bold"
+                    style={{ background: TEAL.brand, color: '#FFFFFF' }}
                   >
-                    {initials || 'VT'}
+                    {initials || "VT"}
                   </div>
-                  <div className="hidden sm:block text-left">
-                    <p
-                      className="text-sm font-medium leading-none"
-                      style={{ color: THEME.text }}
-                    >
-                      {displayName}
-                    </p>
-                    {isVendor ? (
-                      <p
-                        className="text-[10px] leading-tight mt-0.5"
-                        style={{ color: THEME.textMuted }}
-                      >
-                        Vendor{displayEmail ? ` • ${displayEmail}` : ''}
-                      </p>
-                    ) : (
-                      <p
-                        className="text-[10px] mt-0.5"
-                        style={{ color: THEME.textMuted }}
-                      >
-                        {displayRole}
-                      </p>
-                    )}
-                  </div>
-                  <FiChevronDown
-                    size={14}
-                    className="hidden sm:block"
-                    style={{ color: THEME.textMuted }}
-                  />
                 </button>
 
-                {/* Logout */}
+                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="ml-1 p-2 rounded-lg transition-all hover:scale-105 cursor-pointer"
-                  style={{
-                    background: THEME.dangerSoft,
-                    color: THEME.danger,
-                  }}
+                  className="ml-1 sm:ml-2 p-2 rounded-xl hover:bg-red-500/10 text-red-300 hover:text-red-400 transition-all cursor-pointer"
                   title="Logout"
                 >
-                  <FiLogOut size={16} />
+                  <FiLogOut size={18} />
                 </button>
               </div>
             </div>
@@ -322,11 +237,9 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
 
           {/* Tabs - Shown ONLY on /mainlayout */}
           {shouldShowTabs && (
-            <div
-              className="flex items-center border-t overflow-x-auto scrollbar-hide"
-              style={{ borderColor: THEME.border }}
-            >
-              <nav className="flex w-full min-w-max">
+            <div className="flex items-center border-t overflow-x-auto scrollbar-hide"
+                 style={{ borderColor: TEAL.headerBorder }}>
+              <nav className="flex w-full -mb-px min-w-max">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -334,25 +247,15 @@ export default function Header({ activeTab, onTabChange, showNavigation = true }
                     <button
                       key={tab.id}
                       onClick={() => onTabChange(tab.id)}
-                      className="flex items-center gap-2 px-5 sm:px-7 py-3.5 text-sm font-medium whitespace-nowrap transition-all duration-200 relative"
-                      style={{
-                        color: isActive ? THEME.brandDark : THEME.textMuted,
-                      }}
+                      className={`flex items-center gap-2 px-5 sm:px-8 py-4 text-sm font-medium whitespace-nowrap border-b-2 transition-all duration-200 ${
+                        isActive
+                          ? 'bg-black/5'
+                          : 'hover:bg-black/5 border-transparent'
+                      }`}
+                      style={{ color: TEAL.textColor, borderColor: isActive ? TEAL.brand : 'transparent' }}
                     >
-                      <Icon
-                        size={16}
-                        style={{ color: isActive ? THEME.brand : THEME.textMuted }}
-                      />
+                      <Icon size={18} />
                       {tab.label}
-                      {isActive && (
-                        <span
-                          className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full"
-                          style={{
-                            background: `linear-gradient(90deg, ${THEME.brand} 0%, ${THEME.accent} 100%)`,
-                            boxShadow: `0 0 12px ${THEME.brandGlow}`,
-                          }}
-                        />
-                      )}
                     </button>
                   );
                 })}
